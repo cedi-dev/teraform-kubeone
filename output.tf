@@ -51,7 +51,7 @@ output "kubeone_workers" {
       providerSpec = {
         operatingSystem = var.worker_os
         operatingSystemSpec = {
-          distUpgradeOnBoot = false
+          distUpgradeOnBoot = var.dist_upgrade_on_boot
         }
         cloudProviderSpec = {
           # provider specific fields:
