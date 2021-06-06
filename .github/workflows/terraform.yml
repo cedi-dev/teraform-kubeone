@@ -86,5 +86,11 @@ jobs:
         with:
           name: output.json
 
+      - name: Install KubeOne
+        run: |
+          curl https://github.com/kubermatic/kubeone/releases/download/v1.2.1/kubeone_1.2.1_linux_amd64.zip > kubeone.zip
+          unzip kubeone.zip
+          ls -la
+
       - name: KubeOne Apply
         run: kubeone apply --manifest kubeone.yaml --tfjson output.json
