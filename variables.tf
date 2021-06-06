@@ -54,6 +54,10 @@ variable "ssh_agent_socket" {
 
 # Provider specific settings
 
+variable "control_plane_replicas" {
+  default = 3
+}
+
 variable "control_plane_type" {
   default = "cx21"
 }
