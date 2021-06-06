@@ -78,10 +78,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: terraform
     steps:
-    - name: Download output.json
-      uses: actions/download-artifact@v2
-      with:
-        name: output.json
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: la -la
-      run: ls -la
+      - name: Download output.json
+        uses: actions/download-artifact@v2
+        with:
+          name: output.json
+
+      - name: la -la
+        run: ls -la
