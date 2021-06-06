@@ -113,3 +113,9 @@ jobs:
 
       - name: ls
         run: ls -la
+
+      - name: Archive terraform output
+        uses: actions/upload-artifact@v2
+        with:
+          name: k8s.cedi.dev.tar.gz
+          path: k8s.cedi.dev.tar.gz
