@@ -19,6 +19,7 @@ jobs:
         with:
           # terraform_version: 0.13.0:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_wrapper: false
 
       - name: Terraform Format
         id: fmt
@@ -65,7 +66,7 @@ jobs:
         run: terraform apply -auto-approve
 
       - name: Terraform Output
-        run: terraform output -json | awk 'NR>1 {print}' > output.json
+        run: terraform output -json > output.json
 
       - name: Archive tf output
         uses: actions/upload-artifact@v2
