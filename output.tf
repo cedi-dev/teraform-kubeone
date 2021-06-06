@@ -49,7 +49,7 @@ output "kubeone_workers" {
     "${var.cluster_name}-pool1" = {
       replicas = var.workers_replicas
       providerSpec = {
-        sshPublicKeys   = [file(var.ssh_public_key_file)]
+        sshPublicKeys   = [var.ssh_public_key_file]
         operatingSystem = var.worker_os
         operatingSystemSpec = {
           distUpgradeOnBoot = false
