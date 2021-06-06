@@ -99,6 +99,8 @@ jobs:
       
       - name: KubeOne Apply
         run: ./bin/kubeone apply --manifest kubeone.yaml --tfjson output.json
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
       - name: ls
         run: ls -la
