@@ -97,7 +97,7 @@ jobs:
         run: ./bin/kubeone version
       
       - name: KubeOne Apply
-        run: kubeone apply --manifest kubeone.yaml --tfjson output.json
+        run: ./bin/kubeone apply --manifest kubeone.yaml --tfjson output.json
 
       - name: ls
         run: ls -la
