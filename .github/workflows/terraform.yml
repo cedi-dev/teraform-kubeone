@@ -1,4 +1,4 @@
-name: "Terraform"
+name: "Terraform KubeOne"
 
 on:
   push:
@@ -63,3 +63,9 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve
+  kubeone:
+    name: "Terraform"
+    runs-on: ubuntu-latest
+    steps:
+    - name: la -la
+      run: ls -la
