@@ -116,8 +116,8 @@ jobs:
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
-      - name: KubeOne Status
-        run: ./bin/kubeone kubeconfig --manifest kubeone.yaml --tfjson output.json
+      - name: KubeOne Kubeconfig
+        run: ./bin/kubeone kubeconfig --manifest kubeone.yaml --tfjson output.json > kubeconfig
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
@@ -127,5 +127,5 @@ jobs:
       - name: Archive terraform output
         uses: actions/upload-artifact@v2
         with:
-          name: k8s.cedi.dev.tar.gz
-          path: k8s.cedi.dev.tar.gz
+          name: kubeconfig
+          path: kubeconfig
