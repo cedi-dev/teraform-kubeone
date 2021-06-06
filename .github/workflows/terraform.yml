@@ -115,7 +115,7 @@ jobs:
           if_key_exists: replace
       
       - name: KubeOne Apply
-        run: ./bin/kubeone apply --manifest kubeone.yaml --tfjson output.json
+        run: ./bin/kubeone apply --manifest kubeone.yaml --tfjson output.json --auto-approve
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
