@@ -92,9 +92,8 @@ jobs:
           curl -L https://github.com/kubermatic/kubeone/releases/download/v1.2.1/kubeone_1.2.1_linux_amd64.zip -o kubeone.zip
 
           unzip kubeone.zip -d bin
-          export PATH=$PATH:$HOME/bin
-          ls -la
-          echo $PATH
 
-      - name: KubeOne Apply
-        run: kubeone apply --manifest kubeone.yaml --tfjson output.json
+      - name: KubeOne version
+        run: ./bin/kubeone version
+      #- name: KubeOne Apply
+      #  run: kubeone apply --manifest kubeone.yaml --tfjson output.json
