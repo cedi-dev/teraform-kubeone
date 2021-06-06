@@ -111,6 +111,16 @@ jobs:
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
+      - name: KubeOne Status
+        run: ./bin/kubeone status --manifest kubeone.yaml --tfjson output.json
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+
+      - name: KubeOne Status
+        run: ./bin/kubeone kubeconfig --manifest kubeone.yaml --tfjson output.json
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+
       - name: ls
         run: tree .
 
