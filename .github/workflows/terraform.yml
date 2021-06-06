@@ -91,11 +91,19 @@ jobs:
         run: |
           curl --version  
           curl -L https://github.com/kubermatic/kubeone/releases/download/v1.2.1/kubeone_1.2.1_linux_amd64.zip -o kubeone.zip
-
           unzip kubeone.zip -d bin
+          ./bin/kubeone version
 
-      - name: KubeOne version
-        run: ./bin/kubeone version
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: id_ed25519
+          options: |
+            *
+              StrictHostKeyChecking=no
+          known_hosts: unnecessary
+          if_key_exists: replace
       
       - name: KubeOne Apply
         run: ./bin/kubeone apply --manifest kubeone.yaml --tfjson output.json
