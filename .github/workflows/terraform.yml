@@ -87,12 +87,6 @@ jobs:
         with:
           name: output.json
 
-      - name: ls
-        run: ls -la
-
-      - name: cat
-        run: cat output.json
-
       - name: Install KubeOne
         run: |
           curl --version  
