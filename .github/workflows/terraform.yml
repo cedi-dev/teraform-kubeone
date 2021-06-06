@@ -74,22 +74,14 @@ jobs:
         with:
           name: output.json
           path: output.json
-
-      - name: Archive kubeone.yaml
-        uses: actions/upload-artifact@v2
-        with:
-          name: kubeone.yaml
-          path: kubeone.yaml
   
   kubeone:
     name: "Kubeone"
     runs-on: ubuntu-latest
     needs: terraform
     steps:
-      - name: Download kubeone.yaml
-        uses: actions/download-artifact@v2
-        with:
-          name: kubeone.yaml
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Download output.json
         uses: actions/download-artifact@v2
