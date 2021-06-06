@@ -40,7 +40,8 @@ resource "hcloud_server" "control_plane" {
   location    = var.datacenter
 
   ssh_keys = [
-    "cedi@ivy"
+    "cedi@ivy",
+    "ghaction"
   ]
 
   labels = {
