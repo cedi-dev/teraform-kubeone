@@ -67,6 +67,7 @@ jobs:
       - name: Terraform Output
         run: |
           terraform output -json > output.json
+          sed -i '' '1d' output.json
 
       - name: Archive tf output
         uses: actions/upload-artifact@v2

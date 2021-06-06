@@ -1,0 +1,131 @@
+{
+  "kubeone_api": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "endpoint": "string"
+      }
+    ],
+    "value": {
+      "endpoint": "162.55.156.157"
+    }
+  },
+  "kubeone_hosts": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "control_plane": [
+          "object",
+          {
+            "cloud_provider": "string",
+            "cluster_name": "string",
+            "network_id": "string",
+            "private_address": [
+              "tuple",
+              [
+                "string"
+              ]
+            ],
+            "public_address": [
+              "tuple",
+              [
+                "string"
+              ]
+            ],
+            "ssh_agent_socket": "string",
+            "ssh_port": "number",
+            "ssh_private_key_file": "string",
+            "ssh_user": "string"
+          }
+        ]
+      }
+    ],
+    "value": {
+      "control_plane": {
+        "cloud_provider": "hetzner",
+        "cluster_name": "k8s.cedi.dev",
+        "network_id": "1135824",
+        "private_address": [
+          "192.168.0.3"
+        ],
+        "public_address": [
+          "157.90.228.114"
+        ],
+        "ssh_agent_socket": "env:SSH_AUTH_SOCK",
+        "ssh_port": 22,
+        "ssh_private_key_file": "",
+        "ssh_user": "root"
+      }
+    }
+  },
+  "kubeone_workers": {
+    "sensitive": false,
+    "type": [
+      "object",
+      {
+        "k8s.cedi.dev-pool1": [
+          "object",
+          {
+            "providerSpec": [
+              "object",
+              {
+                "cloudProviderSpec": [
+                  "object",
+                  {
+                    "image": "string",
+                    "labels": [
+                      "object",
+                      {
+                        "k8s.cedi.dev-workers": "string"
+                      }
+                    ],
+                    "location": "string",
+                    "networks": [
+                      "tuple",
+                      [
+                        "string"
+                      ]
+                    ],
+                    "serverType": "string"
+                  }
+                ],
+                "operatingSystem": "string",
+                "operatingSystemSpec": [
+                  "object",
+                  {
+                    "distUpgradeOnBoot": "bool"
+                  }
+                ]
+              }
+            ],
+            "replicas": "number"
+          }
+        ]
+      }
+    ],
+    "value": {
+      "k8s.cedi.dev-pool1": {
+        "providerSpec": {
+          "cloudProviderSpec": {
+            "image": "ubuntu-20.04",
+            "labels": {
+              "k8s.cedi.dev-workers": "pool1"
+            },
+            "location": "nbg1",
+            "networks": [
+              "1135824"
+            ],
+            "serverType": "cx21"
+          },
+          "operatingSystem": "ubuntu",
+          "operatingSystemSpec": {
+            "distUpgradeOnBoot": false
+          }
+        },
+        "replicas": 1
+      }
+    }
+  }
+}
