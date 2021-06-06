@@ -65,7 +65,7 @@ variable "workers_replicas" {
   default = 1
 }
 
-variables "dist_upgrade_on_boot" {
+variable "dist_upgrade_on_boot" {
   default = false
 }
 
