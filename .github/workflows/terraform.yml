@@ -107,12 +107,12 @@ jobs:
           if_key_exists: replace
       
       - name: KubeOne Apply
-        run: ./bin/kubeone apply --manifest kubeone.yaml --tfjson output.json --auto-approve
+        run: ./bin/kubeone apply --manifest kubeone.yaml --tfjson output.json --auto-approve --verbose
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
       - name: ls
-        run: ls -la
+        run: tree .
 
       - name: Archive terraform output
         uses: actions/upload-artifact@v2
