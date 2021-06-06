@@ -65,7 +65,7 @@ jobs:
         run: terraform apply -auto-approve
 
       - name: Terraform Output
-        run: terraform output -json | tee output.json
+        run: terraform output -json > output.json
 
       - name: Archive tf output
         uses: actions/upload-artifact@v2
