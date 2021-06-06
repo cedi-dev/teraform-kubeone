@@ -86,5 +86,5 @@ jobs:
         with:
           name: output.json
 
-      - name: la -la
-        run: ls -la
+      - name: KubeOne Apply
+        run: kubeone apply --manifest kubeone.yaml --tfjson output.json
