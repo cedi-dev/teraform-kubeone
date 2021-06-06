@@ -32,7 +32,7 @@ resource "hcloud_network_subnet" "kubeone" {
 }
 
 resource "hcloud_server_network" "control_plane" {
-  count     = control_plane_replicas
+  count     = var.control_plane_replicas
   server_id = element(hcloud_server.control_plane.*.id, count.index)
   subnet_id = hcloud_network_subnet.kubeone.id
 }
