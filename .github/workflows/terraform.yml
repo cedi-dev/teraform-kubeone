@@ -100,7 +100,7 @@ jobs:
         with:
           key: ${{ secrets.SSH_KEY }}
           name: id_ed25519
-          options: |
+          config: |
             *
               StrictHostKeyChecking=no
           known_hosts: unnecessary
