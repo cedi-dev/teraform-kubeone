@@ -14,11 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-resource "hcloud_ssh_key" "kubeone" {
-  name       = "kubeone-${var.cluster_name}"
-  public_key = var.ssh_public_key_file
-}
-
 resource "hcloud_network" "net" {
   name     = var.cluster_name
   ip_range = var.ip_range
@@ -45,7 +40,7 @@ resource "hcloud_server" "control_plane" {
   location    = var.datacenter
 
   ssh_keys = [
-    hcloud_ssh_key.kubeone.id,
+    "cedi@ivy"
   ]
 
   labels = {

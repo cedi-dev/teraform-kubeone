@@ -27,11 +27,6 @@ variable "worker_os" {
   default = "ubuntu"
 }
 
-variable "ssh_public_key_file" {
-  description = "SSH public key file"
-  default     = "~/.ssh/id_rsa.pub"
-}
-
 variable "ssh_port" {
   description = "SSH port to be used to provision instances"
   default     = 22
