@@ -134,29 +134,6 @@ jobs:
           name: kubeconfig
           path: kubeconfig
 
-      - name: Template machinedeployment.yaml
-        run: |
-          export NETWORK_ID="$(jq '.kubeone_hosts.value.control_plane.network_id' < output.json)"
-          export VERSION="$(cat kubeone.yaml | grep -A 1 versions | grep kubernetes | awk '{print $2}')"
-          export CLUSTERNAME="$(cat kubeone.yaml | grep "name:" | awk '{print $2}')"
-          envsubst < machinedeployment.yaml.tpl > machinedeployment.yaml
-        env:
-          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
-          REPLICAS: 3
-          SERVER_TYPE: "cx21"
-          LOCATION: "fsn1"
-          OS: "ubuntu"
-          IMAGE: "ubuntu-20.04"
-
-      - name: Debug machinedeployment.yaml
-        run: cat machinedeployment.yaml
-
-      - name: Archive terraform output
-        uses: actions/upload-artifact@v2
-        with:
-          name: machinedeployment.yaml
-          path: machinedeployment.yaml
-
       - name: Install kubectl
         run: |
           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
