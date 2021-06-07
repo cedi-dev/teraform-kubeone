@@ -159,7 +159,7 @@ jobs:
 
       - name: Install kubectl
         run: |
-          apt install -y kubectl
+          sudo apt install -y kubectl
           kubectl get pods -A
         env:
           KUBECONFIG: ./kubeconfig
