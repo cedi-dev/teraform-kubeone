@@ -120,11 +120,7 @@ dynamicWorkers:
     providerSpec:
       labels:
         mylabel: 'cx11'
-      # SSH keys can be inferred from Terraform if this list is empty
-      # and your tf output contains a "ssh_public_keys" field.
-      # sshPublicKeys:
-      # - 'ssh-rsa ......'
-      # cloudProviderSpec corresponds 'provider.name' config
+      cloudProvider: "hetzner"
       cloudProviderSpec:
         instanceType: 'cx11'
       operatingSystem: 'ubuntu'
