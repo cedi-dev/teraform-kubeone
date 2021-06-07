@@ -135,7 +135,7 @@ jobs:
           name: kubeconfig
           path: kubeconfig
 
-      - name: Template kubeone.yaml
+      - name: Template machinedeployment.yaml
         run: |
           export NETWORK_ID="$(jq '.kubeone_hosts.value.control_plane.network_id' < output.json)"
           export VERSION="$(cat kubeone.yaml | grep -A 1 versions | grep kubernetes | awk '{print $2}')"
@@ -148,3 +148,6 @@ jobs:
           LOCATION: "fsn1"
           OS: "ubuntu"
           IMAGE: "ubuntu-20.04"
+
+      - name: Debug machinedeployment.yaml
+        run: cat machinedeployment.yaml
