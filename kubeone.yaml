@@ -115,7 +115,7 @@ machineController:
 # worker nodes in your cluster. Each element in this "workers"
 # list is a single deployment and must have a unique name.
 dynamicWorkers:
-  - name: cx11
+  - name: k8s.cedi.dev-pool1
     replicas: 3
     providerSpec:
       labels:
