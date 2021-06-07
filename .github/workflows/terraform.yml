@@ -123,7 +123,6 @@ jobs:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
       - name: KubeOne Kubeconfig
-        if: ${{ github.event.inputs.kubeconfig  == 'true' }}
         run: ./bin/kubeone kubeconfig --manifest kubeone.yaml --tfjson output.json > kubeconfig
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
@@ -151,3 +150,15 @@ jobs:
 
       - name: Debug machinedeployment.yaml
         run: cat machinedeployment.yaml
+
+      - name: Archive terraform output
+        uses: actions/upload-artifact@v2
+        with:
+          name: machinedeployment.yaml
+          path: machinedeployment.yaml
+
+      - uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ./kubeconfig
+        with:
+          args: get pods -A
