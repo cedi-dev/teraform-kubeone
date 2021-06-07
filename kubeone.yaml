@@ -115,18 +115,18 @@ machineController:
 # worker nodes in your cluster. Each element in this "workers"
 # list is a single deployment and must have a unique name.
 dynamicWorkers:
-- name: cx11
-  replicas: 3
-  providerSpec:
-    labels:
-      mylabel: 'cx11'
-    # SSH keys can be inferred from Terraform if this list is empty
-    # and your tf output contains a "ssh_public_keys" field.
-    # sshPublicKeys:
-    # - 'ssh-rsa ......'
-    # cloudProviderSpec corresponds 'provider.name' config
-    cloudProviderSpec:
-      instanceType: 'cx11'
-    operatingSystem: 'ubuntu'
-    operatingSystemSpec:
-      distUpgradeOnBoot: true
+  - name: cx11
+    replicas: 3
+    providerSpec:
+      labels:
+        mylabel: 'cx11'
+      # SSH keys can be inferred from Terraform if this list is empty
+      # and your tf output contains a "ssh_public_keys" field.
+      # sshPublicKeys:
+      # - 'ssh-rsa ......'
+      # cloudProviderSpec corresponds 'provider.name' config
+      cloudProviderSpec:
+        instanceType: 'cx11'
+      operatingSystem: 'ubuntu'
+      operatingSystemSpec:
+        distUpgradeOnBoot: true
