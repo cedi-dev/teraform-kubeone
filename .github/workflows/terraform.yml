@@ -111,6 +111,11 @@ jobs:
               StrictHostKeyChecking=no
           known_hosts: unnecessary
           if_key_exists: replace
+
+      - name: Template hcloud-csi
+        run: envsubst < ./addons/hcloud-csi.yaml.tpl > ./addons/hcloud-csi.yaml
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
       
       - name: KubeOne Apply
         run: ./bin/kubeone apply --manifest kubeone.yaml --tfjson output.json --auto-approve --verbose
