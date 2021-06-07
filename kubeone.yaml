@@ -41,6 +41,7 @@ clusterNetwork:
 cloudProvider:
   # Set the kubelet flag '--cloud-provider=external' and deploy the external CCM for supported providers
   external: true
+  hetzner: {}
 
 # Controls which container runtime will be installed on instances.
 # By default:
@@ -120,7 +121,6 @@ dynamicWorkers:
     providerSpec:
       labels:
         mylabel: 'cx11'
-      cloudProvider: "hetzner"
       cloudProviderSpec:
         instanceType: 'cx11'
       operatingSystem: 'ubuntu'
