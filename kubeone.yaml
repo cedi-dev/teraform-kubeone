@@ -117,12 +117,3 @@ machineController:
 # list is a single deployment and must have a unique name.
 dynamicWorkers:
   - name: k8s.cedi.dev-pool1
-    replicas: 3
-    providerSpec:
-      labels:
-        mylabel: 'cx11'
-      cloudProviderSpec:
-        instanceType: 'cx11'
-      operatingSystem: 'ubuntu'
-      operatingSystemSpec:
-        distUpgradeOnBoot: true
