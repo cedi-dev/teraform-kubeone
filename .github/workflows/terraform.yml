@@ -123,14 +123,14 @@ jobs:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
       - name: KubeOne Kubeconfig
-        if: ${{ github.event.inputs.kubeconfig }} == 'true'
+        if: ${{ github.event.inputs.kubeconfig  == 'true' }}
         run: ./bin/kubeone kubeconfig --manifest kubeone.yaml --tfjson output.json > kubeconfig
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
-      - name: Archive terraform output
+      - name: Archive kubeconfig
         uses: actions/upload-artifact@v2
-        if: ${{ github.event.inputs.kubeconfig }} == 'true'
+        if: ${{ github.event.inputs.kubeconfig == 'true' }}
         with:
           name: kubeconfig
           path: kubeconfig
