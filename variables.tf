@@ -33,16 +33,16 @@ variable "ssh_agent_socket" {
 
 # Provider specific settings
 
+variable "control_plane_replicas" {
+  default = 3
+}
+
 variable "control_plane_type" {
   default = "cx21"
 }
 
 variable "worker_type" {
   default = "cx21"
-}
-
-variable "workers_replicas" {
-  default = 1
 }
 
 variable "dist_upgrade_on_boot" {
