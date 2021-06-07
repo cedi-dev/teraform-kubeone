@@ -157,8 +157,10 @@ jobs:
           name: machinedeployment.yaml
           path: machinedeployment.yaml
 
-      - uses: actions-hub/kubectl@master
+      - name: Install kubectl
+        run: |
+          apt install -y kubectl
+          kubectl get pods -A
         env:
-          KUBE_CONFIG: ./kubeconfig
-        with:
-          args: get pods -A
+          KUBECONFIG: ./kubeconfig
+          
