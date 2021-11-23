@@ -97,9 +97,9 @@ jobs:
       - name: Install KubeOne
         run: |
           curl --version  
-          curl -L https://github.com/kubermatic/kubeone/releases/download/v1.2.1/kubeone_1.2.1_linux_amd64.zip -o kubeone.zip
+          curl -sfL get.kubeone.io | sh
           unzip kubeone.zip -d bin
-          ./bin/kubeone version
+          /usr/local/bin/kubeone version
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -118,17 +118,17 @@ jobs:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
       
       - name: KubeOne Apply
-        run: ./bin/kubeone apply --manifest kubeone.yaml --tfjson output.json --auto-approve --verbose
+        run: /usr/local/bin/kubeone apply --manifest kubeone.yaml --tfjson output.json --auto-approve --verbose
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
       - name: KubeOne Status
-        run: ./bin/kubeone status --manifest kubeone.yaml --tfjson output.json
+        run: /usr/local/bin/kubeone status --manifest kubeone.yaml --tfjson output.json
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
       - name: KubeOne Kubeconfig
-        run: ./bin/kubeone kubeconfig --manifest kubeone.yaml --tfjson output.json > kubeconfig
+        run: /usr/local/bin/kubeone kubeconfig --manifest kubeone.yaml --tfjson output.json > kubeconfig
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 

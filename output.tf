@@ -40,37 +40,37 @@ output "kubeone_hosts" {
   }
 }
 
-output "kubeone_workers" {
-  description = "Workers definitions, that will be transformed into MachineDeployment object"
-
-  value = {
-    # following outputs will be parsed by kubeone and automatically merged into
-    # corresponding (by name) worker definition
-    "${var.cluster_name}-pool1" = {
-      replicas = 3
-      providerSpec = {
-        operatingSystem = var.worker_os
-        operatingSystemSpec = {
-          distUpgradeOnBoot = var.dist_upgrade_on_boot
-        }
-        cloudProviderSpec = {
-          # provider specific fields:
-          # see example under `cloudProviderSpec` section at:
-          # https://github.com/kubermatic/machine-controller/blob/master/examples/hetzner-machinedeployment.yaml
-          serverType = var.worker_type
-          location   = var.datacenter
-          image      = var.image
-          networks = [
-            hcloud_network.net.id
-          ]
-          # Datacenter (optional)
-          # datacenter = ""
-          labels = {
-            "${var.cluster_name}-workers" = "pool1"
-          }
-        }
-      }
-    }
-  }
-}
+# output "kubeone_workers" {
+#   description = "Workers definitions, that will be transformed into MachineDeployment object"
+# 
+#   value = {
+#     # following outputs will be parsed by kubeone and automatically merged into
+#     # corresponding (by name) worker definition
+#     "${var.cluster_name}-pool1" = {
+#       replicas = 3
+#       providerSpec = {
+#         operatingSystem = var.worker_os
+#         operatingSystemSpec = {
+#           distUpgradeOnBoot = var.dist_upgrade_on_boot
+#         }
+#         cloudProviderSpec = {
+#           # provider specific fields:
+#           # see example under `cloudProviderSpec` section at:
+#           # https://github.com/kubermatic/machine-controller/blob/master/examples/hetzner-machinedeployment.yaml
+#           serverType = var.worker_type
+#           location   = var.datacenter
+#           image      = var.image
+#           networks = [
+#             hcloud_network.net.id
+#           ]
+#           # Datacenter (optional)
+#           # datacenter = ""
+#           labels = {
+#             "${var.cluster_name}-workers" = "pool1"
+#           }
+#         }
+#       }
+#     }
+#   }
+# }
 
