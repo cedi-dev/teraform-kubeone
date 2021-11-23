@@ -166,6 +166,17 @@ jobs:
           NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r < output.json` \
           envsubst < ./machinedeployment.yaml.tpl > ./machinedeployment.yaml
 
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: id_ed25519
+          config: |
+            *
+              StrictHostKeyChecking=no
+          known_hosts: unnecessary
+          if_key_exists: replace
+          
       - name: Install KubeOne
         run: |
           git clone https://github.com/kubermatic/kubeone.git
