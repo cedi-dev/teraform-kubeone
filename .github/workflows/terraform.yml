@@ -98,8 +98,8 @@ jobs:
         run: |
           curl --version  
           curl -sfL get.kubeone.io | sh
-          unzip kubeone.zip -d bin
           /usr/local/bin/kubeone version
+          kubeone version
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
