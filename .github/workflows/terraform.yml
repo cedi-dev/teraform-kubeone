@@ -96,8 +96,18 @@ jobs:
 
       - name: Install KubeOne
         run: |
-          curl --version  
-          curl -sfL get.kubeone.io | sh
+          git clone https://github.com/kubermatic/kubeone.git
+          cd kubeone
+          go build \
+            -ldflags "\
+            -s -w \
+            -X k8c.io/kubeone/pkg/cmd.version=`git describe --tags` \
+            -X k8c.io/kubeone/pkg/cmd.commit=`git rev-parse HEAD` \
+            -X k8c.io/kubeone/pkg/cmd.date=`date +%FT%T%z` \
+            "\
+            -o kubeone \
+            main.go
+          cp kubeone /usr/local/bin/kubeone
           kubeone version
 
       - name: Install SSH key
