@@ -64,3 +64,8 @@ override.tf.json
 # End of https://www.toptal.com/developers/gitignore/api/terraform,macos
 
 machinedeployment.yaml
+credentials.yaml
+.terraform.lock.hcl
+k8s-cedi-dev-kubeconfig
+k8s-cedi-dev.tar.gz
+output.json
