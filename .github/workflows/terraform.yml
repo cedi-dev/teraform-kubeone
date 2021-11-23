@@ -131,3 +131,68 @@ jobs:
 
       - name: KubeOne Status
         run: kubeone status --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json
+
+  kubectl:
+    name: "kubectl"
+    runs-on: ubuntu-latest
+    needs: terraform
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download output.json
+        uses: actions/download-artifact@v2
+        with:
+          name: output.json
+
+      - name: Template credentials file
+        run: envsubst < ./credentials.yaml.tpl > ./credentials.yaml
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+
+      - name: Template machine-deployment file
+        run: |
+          NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r < output.json` \
+          envsubst < ./machinedeployment.yaml.tpl > ./machinedeployment.yaml
+
+      - name: Install KubeOne
+        run: |
+          git clone https://github.com/kubermatic/kubeone.git
+          cd kubeone
+          go build \
+            -ldflags "\
+            -s -w \
+            -X k8c.io/kubeone/pkg/cmd.version=`git describe --tags` \
+            -X k8c.io/kubeone/pkg/cmd.commit=`git rev-parse HEAD` \
+            -X k8c.io/kubeone/pkg/cmd.date=`date +%FT%T%z` \
+            "\
+            -o kubeone \
+            main.go
+          cp kubeone /usr/local/bin/kubeone
+          kubeone version
+
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+          echo "$(<kubectl.sha256) kubectl" | sha256sum --check
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+      - name: Obtain kubeconfig
+        run: kubeone kubeconfig --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json > kubeconfig
+
+      - name: Status
+        run: |
+          kubectl version
+          kubectl get pods -A
+        env:
+          KUBECONFIG: ./kubeconfig
+
+      - name: Archive kubeconfig
+        uses: actions/upload-artifact@v2
+        if: ${{ github.event.inputs.kubeconfig == 'true' }}
+        with:
+          name: kubeconfig
+          path: kubeconfig
+          
