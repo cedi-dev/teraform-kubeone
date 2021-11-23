@@ -127,36 +127,7 @@ jobs:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
       
       - name: KubeOne Apply
-        run: kubeone apply --manifest kubeone.yaml --credentials credentials.yaml -tfjson output.json --auto-approve --verbose
-        env:
-          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+        run: kubeone apply --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json --auto-approve --verbose
 
       - name: KubeOne Status
-        run: kubeone status --manifest kubeone.yaml --tfjson output.json
-        env:
-          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
-
-      - name: KubeOne Kubeconfig
-        run: kubeone kubeconfig --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json > kubeconfig
-
-      - name: Archive kubeconfig
-        uses: actions/upload-artifact@v2
-        if: ${{ github.event.inputs.kubeconfig == 'true' }}
-        with:
-          name: kubeconfig
-          path: kubeconfig
-
-      - name: Install kubectl
-        run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
-          echo "$(<kubectl.sha256) kubectl" | sha256sum --check
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-
-      - name: Install kubectl
-        run: |
-          kubectl version
-          kubectl get pods -A
-        env:
-          KUBECONFIG: ./kubeconfig
-          
+        run: kubeone status --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json
