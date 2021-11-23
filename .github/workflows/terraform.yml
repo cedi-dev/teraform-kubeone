@@ -10,7 +10,7 @@ on:
       kubeconfig:
         description: 'Generate Kubeconfig'
         required: true
-        default: 'false'
+        default: 'true' # FIXME! DISABLE!!!!
 
 jobs:
   terraform:
@@ -98,7 +98,6 @@ jobs:
         run: |
           curl --version  
           curl -sfL get.kubeone.io | sh
-          /usr/local/bin/kubeone version
           kubeone version
 
       - name: Install SSH key
@@ -112,25 +111,23 @@ jobs:
           known_hosts: unnecessary
           if_key_exists: replace
 
-      - name: Template hcloud-csi
-        run: envsubst < ./addons/hcloud-csi.yaml.tpl > ./addons/hcloud-csi.yaml
+      - name: Template credentials file
+        run: envsubst < ./credentials.yaml.tpl > ./credentials.yaml
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
       
       - name: KubeOne Apply
-        run: /usr/local/bin/kubeone apply --manifest kubeone.yaml --tfjson output.json --auto-approve --verbose
+        run: kubeone apply --manifest kubeone.yaml --credentials credentials.yaml -tfjson output.json --auto-approve --verbose
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
       - name: KubeOne Status
-        run: /usr/local/bin/kubeone status --manifest kubeone.yaml --tfjson output.json
+        run: kubeone status --manifest kubeone.yaml --tfjson output.json
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
       - name: KubeOne Kubeconfig
-        run: /usr/local/bin/kubeone kubeconfig --manifest kubeone.yaml --tfjson output.json > kubeconfig
-        env:
-          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+        run: kubeone kubeconfig --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json > kubeconfig
 
       - name: Archive kubeconfig
         uses: actions/upload-artifact@v2
