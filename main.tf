@@ -41,6 +41,7 @@ resource "hcloud_server" "control_plane" {
 
   ssh_keys = [
     "cedi@ivy",
+    "cedi@ava",
     "ghaction"
   ]
 
