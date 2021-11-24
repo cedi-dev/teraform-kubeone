@@ -98,7 +98,7 @@ jobs:
           file_or_dir: .
           format: github
           config_file: .yamllint.yml
-          
+
   kubeone:
     name: "kubeone"
     runs-on: ubuntu-latest
@@ -178,7 +178,7 @@ jobs:
       - name: Obtain kubeconfig
         run: |
           kubeone kubeconfig --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json > kubeconfig
-          BASE64_KUBECONFIG=`base64 < kubeconfig``
+          BASE64_KUBECONFIG=`base64 < kubeconfig`
           echo "KUBE_CONFIG='$BASE64_KUBECONFIG'" >> $GITHUB_ENV
 
       - name: Template machine-deployment file
