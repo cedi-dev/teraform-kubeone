@@ -55,7 +55,7 @@ jobs:
             \`\`\`${process.env.PLAN}\`\`\`
             </details>
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-              
+
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
@@ -92,7 +92,7 @@ jobs:
           export CLUSTER_NAME=`jq '.kubeone_hosts.value.control_plane.cluster_name' -r < output.json`
           export CLUSTER_VERSION=`yq e -j < kubeone.yaml | jq '.versions.kubernetes' -r`
           envsubst < ./machinedeployment.yaml.tpl > ./machinedeployment.yaml
-          
+
       - uses: ibiqlik/action-yamllint@v3
         with:
           file_or_dir: .
@@ -133,7 +133,7 @@ jobs:
         run: envsubst < ./credentials.yaml.tpl > ./credentials.yaml
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
-      
+
       - name: KubeOne Apply
         run: kubeone apply --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json --auto-approve --verbose
 
@@ -207,4 +207,3 @@ jobs:
         with:
           name: kubeconfig
           path: kubeconfig
-          
