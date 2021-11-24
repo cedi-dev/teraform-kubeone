@@ -83,6 +83,9 @@ jobs:
     name: "lint"
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
       - name: Template machine-deployment file
         run: |
           NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r < output.json` \
