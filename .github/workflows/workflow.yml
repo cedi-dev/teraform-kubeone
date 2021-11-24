@@ -14,7 +14,7 @@ on:
 
 jobs:
   lint:
-    name: "lint"
+    name: "Lint Configuration"
     runs-on: ubuntu-latest
     steps:
       - name: Setup Terraform
@@ -47,7 +47,7 @@ jobs:
         run: terraform init && terraform validate
 
   terraform:
-    name: "terraform"
+    name: "[Terraform] Deploy Infrastructure"
     runs-on: ubuntu-latest
     needs: lint
     steps:
@@ -111,7 +111,7 @@ jobs:
           path: output.json
 
   kubeone:
-    name: "kubeone"
+    name: "[KubeOne] Provision K8s Cluster"
     runs-on: ubuntu-latest
     needs: terraform
     if: github.ref == 'refs/heads/main'
@@ -152,7 +152,7 @@ jobs:
         run: kubeone status --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json
 
   kubectl:
-    name: "kubectl"
+    name: "[kubectl] Apply initial configuration"
     runs-on: ubuntu-latest
     needs: kubeone
     if: github.ref == 'refs/heads/main'
@@ -202,12 +202,6 @@ jobs:
           export CLUSTER_NAME=`jq '.kubeone_hosts.value.control_plane.cluster_name' -r < output.json`
           export CLUSTER_VERSION=`yq e -j < kubeone.yaml | jq '.versions.kubernetes' -r`
           envsubst < ./machinedeployment.yaml.tpl > ./machinedeployment.yaml
-
-      - name: Archive machinedeployment
-        uses: actions/upload-artifact@v2
-        with:
-          name: machinedeployment
-          path: machinedeployment.yaml
 
       - name: Apply MachineDeployment
         run: kubectl apply -f ./machinedeployment.yaml
