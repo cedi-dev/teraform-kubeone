@@ -2,8 +2,8 @@
 apiVersion: "cluster.k8s.io/v1alpha1"
 kind: MachineDeployment
 metadata:
-  name: cx11
-  namespace: kube-system
+  name: "${CLUSTER_NAME}-cx11"
+  namespace: "kube-system"
   annotations:
     cluster.k8s.io/cluster-api-autoscaler-node-group-min-size: "1"
     cluster.k8s.io/cluster-api-autoscaler-node-group-max-size: "3"
@@ -18,11 +18,11 @@ spec:
   minReadySeconds: 0
   selector:
     matchLabels:
-      node: k8s-cedi-dev
+      node: "${CLUSTER_NAME}"
   template:
     metadata:
       labels:
-        node: k8s-cedi-dev
+        node: "${CLUSTER_NAME}"
     env:
       - name: HZ_TOKEN
         valueFrom:
@@ -39,9 +39,9 @@ spec:
             image: "ubuntu-20.04"
             # Optional: network IDs or names
             networks:
-              - ${NETWORK_ID}
+              - "${NETWORK_ID}"
           operatingSystem: "ubuntu"
           operatingSystemSpec:
             distUpgradeOnBoot: false
       versions:
-        kubelet: "1.20.4"
+        kubelet: "${CLUSTER_VERSION}"

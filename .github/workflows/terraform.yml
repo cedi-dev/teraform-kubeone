@@ -85,11 +85,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        
+
       - name: Template machine-deployment file
         run: |
-          NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r < output.json` \
+          export NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r < output.json`
+          export CLUSTER_NAME=`jq '.kubeone_hosts.value.control_plane.cluster_name' -r < output.json`
+          export CLUSTER_VERSION=`yq e -j < kubeone.yaml | jq '.versions.kubernetes' -r`
           envsubst < ./machinedeployment.yaml.tpl > ./machinedeployment.yaml
+          
 
       - uses: azure/k8s-lint@v1
         with:
@@ -175,11 +178,13 @@ jobs:
       - name: Obtain kubeconfig
         run: |
           kubeone kubeconfig --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json > kubeconfig
-          export KUBE_CONFIG=$(base64 < kubeconfig)
+          echo "KUBE_CONFIG=$(base64 < kubeconfig)" >> $GITHUB_ENV
 
       - name: Template machine-deployment file
         run: |
-          NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r < output.json` \
+          export NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r < output.json`
+          export CLUSTER_NAME=`jq '.kubeone_hosts.value.control_plane.cluster_name' -r < output.json`
+          export CLUSTER_VERSION=`yq e -j < kubeone.yaml | jq '.versions.kubernetes' -r`
           envsubst < ./machinedeployment.yaml.tpl > ./machinedeployment.yaml
 
       - name: Archive machinedeployment
