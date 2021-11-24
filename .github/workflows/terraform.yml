@@ -151,6 +151,13 @@ jobs:
         with:
           version: main
 
+      - name: Install kubectl
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+          echo "$(<kubectl.sha256) kubectl" | sha256sum --check
+          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -195,11 +202,9 @@ jobs:
           path: machinedeployment.yaml
 
       - name: Apply MachineDeployment
-        uses: actions-hub/kubectl@master
+        run: kubectl apply -f ./machinedeployment.yaml
         env:
-          KUBE_CONFIG: ${{ env.KUBE_CONFIG }}
-        with:
-          args: apply -f ./machinedeployment.yaml
+          KUBECONFIG: ./kubeconfig
 
       - name: Archive kubeconfig
         uses: actions/upload-artifact@v2
