@@ -13,9 +13,43 @@ on:
         default: 'false'
 
 jobs:
+  lint:
+    name: "lint"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          # terraform_version: 0.13.0:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_wrapper: false
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Template machine-deployment file
+        run: |
+          export NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r < output.json`
+          export CLUSTER_NAME=`jq '.kubeone_hosts.value.control_plane.cluster_name' -r < output.json`
+          export CLUSTER_VERSION=`yq e -j < kubeone.yaml | jq '.versions.kubernetes' -r`
+          envsubst < ./machinedeployment.yaml.tpl > ./machinedeployment.yaml
+
+      - uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: .
+          format: github
+          config_file: .yamllint.yml
+
+      - name: Terraform format check
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        run: terraform init && terraform validate
+
   terraform:
     name: "terraform"
     runs-on: ubuntu-latest
+    needs: lint
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -26,10 +60,6 @@ jobs:
           # terraform_version: 0.13.0:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
           terraform_wrapper: false
-
-      - name: Terraform Format
-        id: fmt
-        run: terraform fmt -check
 
       - name: Terraform Init
         id: init
@@ -79,25 +109,6 @@ jobs:
         with:
           name: output.json
           path: output.json
-  lint:
-    name: "lint"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Template machine-deployment file
-        run: |
-          export NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r < output.json`
-          export CLUSTER_NAME=`jq '.kubeone_hosts.value.control_plane.cluster_name' -r < output.json`
-          export CLUSTER_VERSION=`yq e -j < kubeone.yaml | jq '.versions.kubernetes' -r`
-          envsubst < ./machinedeployment.yaml.tpl > ./machinedeployment.yaml
-
-      - uses: ibiqlik/action-yamllint@v3
-        with:
-          file_or_dir: .
-          format: github
-          config_file: .yamllint.yml
 
   kubeone:
     name: "kubeone"
@@ -183,10 +194,7 @@ jobs:
           if_key_exists: replace
 
       - name: Obtain kubeconfig
-        run: |
-          kubeone kubeconfig --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json > kubeconfig
-          BASE64_KUBECONFIG=`base64 < kubeconfig`
-          echo "KUBE_CONFIG='$BASE64_KUBECONFIG'" >> $GITHUB_ENV
+        run: kubeone kubeconfig --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json > kubeconfig
 
       - name: Template machine-deployment file
         run: |
