@@ -93,12 +93,9 @@ jobs:
           export CLUSTER_VERSION=`yq e -j < kubeone.yaml | jq '.versions.kubernetes' -r`
           envsubst < ./machinedeployment.yaml.tpl > ./machinedeployment.yaml
           
-
-      - uses: azure/k8s-lint@v1
+      - uses: ibiqlik/action-yamllint@v3
         with:
-          manifests: |
-              addons/argocd/install.yaml
-              machinedeployment.yaml
+          file_or_dir: .
   kubeone:
     name: "kubeone"
     runs-on: ubuntu-latest
