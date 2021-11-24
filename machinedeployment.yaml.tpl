@@ -5,8 +5,8 @@ metadata:
   name: cx11
   namespace: kube-system
   annotations:
-    cluster.k8s.io/cluster-api-autoscaler-node-group-min-size: 1
-    cluster.k8s.io/cluster-api-autoscaler-node-group-max-size: 3
+    cluster.k8s.io/cluster-api-autoscaler-node-group-min-size: "1"
+    cluster.k8s.io/cluster-api-autoscaler-node-group-max-size: "3"
 spec:
   paused: false
   replicas: 1
