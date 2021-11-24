@@ -146,7 +146,7 @@ jobs:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
       - name: KubeOne Apply
-        run: kubeone apply --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json --auto-approve --verbose
+        run: kubeone apply --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json --auto-approve
 
       - name: KubeOne Status
         run: kubeone status --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json
