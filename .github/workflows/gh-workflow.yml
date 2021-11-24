@@ -196,6 +196,13 @@ jobs:
       - name: Obtain kubeconfig
         run: kubeone kubeconfig --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json > kubeconfig
 
+      - name: Archive kubeconfig
+        uses: actions/upload-artifact@v2
+        if: ${{ github.event.inputs.kubeconfig == 'true' }}
+        with:
+          name: kubeconfig
+          path: kubeconfig
+
       - name: Template machine-deployment file
         run: |
           export NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r < output.json`
@@ -208,9 +215,8 @@ jobs:
         env:
           KUBECONFIG: ./kubeconfig
 
-      - name: Archive kubeconfig
-        uses: actions/upload-artifact@v2
-        if: ${{ github.event.inputs.kubeconfig == 'true' }}
-        with:
-          name: kubeconfig
-          path: kubeconfig
+      - name: Install meta ArgoCD Application
+        run: |
+          git clone https://github.com/cedi-dev/k8s-manifests.git
+          cd k8s-manifests
+          kubectl apply -f argo-apps/k8s-cedi-dev.yaml
