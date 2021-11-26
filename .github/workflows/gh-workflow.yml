@@ -141,7 +141,7 @@ jobs:
           if_key_exists: replace
 
       - name: Template credentials file
-        run: envsubst < ./credentials.yaml.tpl > ./credentials.yaml
+        run: envsubst < ./manifests/credentials.yaml.tpl > ./credentials.yaml
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
@@ -178,7 +178,7 @@ jobs:
           name: output.json
 
       - name: Template credentials file
-        run: envsubst < ./credentials.yaml.tpl > ./credentials.yaml
+        run: envsubst < ./manifests/credentials.yaml.tpl > ./credentials.yaml
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
@@ -208,10 +208,22 @@ jobs:
           export NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r < output.json`
           export CLUSTER_NAME=`jq '.kubeone_hosts.value.control_plane.cluster_name' -r < output.json`
           export CLUSTER_VERSION=`yq e -j < kubeone.yaml | jq '.versions.kubernetes' -r`
-          envsubst < ./machinedeployment.yaml.tpl > ./machinedeployment.yaml
+          envsubst < ./manifests/machinedeployment.yaml.tpl > ./machinedeployment.yaml
 
       - name: Apply MachineDeployment
         run: kubectl apply -f ./machinedeployment.yaml
+        env:
+          KUBECONFIG: ./kubeconfig
+
+      - name: Template Hetzner API Secrets
+        run: |
+          envsubst < ./manifests/hcloud_secret.yaml.tpl > ./hcloud_secret.yaml
+        env:
+          HDNS_TOKEN: ${{ secrets.HDNS_TOKEN }}
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+
+      - name: Apply Hetzner API Secrets
+        run: kubectl apply -f ./hcloud_secret.yaml
         env:
           KUBECONFIG: ./kubeconfig
 
