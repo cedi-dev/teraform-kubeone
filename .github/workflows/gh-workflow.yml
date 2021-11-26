@@ -32,7 +32,7 @@ jobs:
           export NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r < output.json`
           export CLUSTER_NAME=`jq '.kubeone_hosts.value.control_plane.cluster_name' -r < output.json`
           export CLUSTER_VERSION=`yq e -j < kubeone.yaml | jq '.versions.kubernetes' -r`
-          envsubst < ./machinedeployment.yaml.tpl > ./machinedeployment.yaml
+          envsubst < ./manifests/machinedeployment.yaml.tpl > ./machinedeployment.yaml
 
       - uses: ibiqlik/action-yamllint@v3
         with:
