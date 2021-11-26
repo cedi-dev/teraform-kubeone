@@ -40,6 +40,14 @@ output "kubeone_hosts" {
   }
 }
 
+output "metallb_fip" {
+  description = "Floating IP used by MetalLB"
+
+  value = {
+    metallb_fip = hcloud_floating_ip.fip_metallb.ip_address
+  }
+}
+
 # output "kubeone_workers" {
 #   description = "Workers definitions, that will be transformed into MachineDeployment object"
 # 

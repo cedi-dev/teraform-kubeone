@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: external-dns
+  name: fip-controller
 
 ---
 apiVersion: v1
@@ -10,6 +10,6 @@ kind: Secret
 type: Opaque
 metadata:
   name: cloud-provider-credentials
-  namespace: external-dns
+  namespace: fip-controller
 data:
-  HZ_DNS_TOKEN: ${HDNS_TOKEN}
+  HCLOUD_API_TOKEN: ${HCLOUD_TOKEN}

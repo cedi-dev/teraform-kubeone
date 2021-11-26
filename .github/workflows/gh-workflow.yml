@@ -220,10 +220,20 @@ jobs:
           envsubst < ./manifests/hcloud_secret.yaml.tpl > ./hcloud_secret.yaml
         env:
           HDNS_TOKEN: ${{ secrets.HDNS_TOKEN }}
-          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
       - name: Apply Hetzner API Secrets
         run: kubectl apply -f ./hcloud_secret.yaml
+        env:
+          KUBECONFIG: ./kubeconfig
+
+      - name: Template fip-controller secrets
+        run: |
+          envsubst < ./manifests/fip-controller_secret.yaml.tpl > ./fip-controller_secret.yaml
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+
+      - name: Apply fip-controller secrets
+        run: kubectl apply -f ./fip-controller_secret.yaml
         env:
           KUBECONFIG: ./kubeconfig
 
