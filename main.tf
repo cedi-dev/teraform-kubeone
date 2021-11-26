@@ -85,3 +85,8 @@ resource "hcloud_load_balancer_service" "load_balancer_service" {
   listen_port      = 6443
   destination_port = 6443
 }
+
+resource "hcloud_floating_ip" "fip_metallb" {
+  type          = "ipv4"
+  home_location = var.datacenter
+}
