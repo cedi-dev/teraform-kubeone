@@ -37,7 +37,7 @@ jobs:
       - uses: ibiqlik/action-yamllint@v3
         with:
           file_or_dir: .
-          format: github
+          format: standard
           config_file: .yamllint.yml
 
       - name: Terraform format check
