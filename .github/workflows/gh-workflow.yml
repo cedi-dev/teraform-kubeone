@@ -227,8 +227,12 @@ jobs:
         env:
           KUBECONFIG: ./kubeconfig
 
+      - name: Clone ArgoCD Repo
+        uses: actions/checkout@master
+        with:
+          repository: cedi-dev/k8s-manifests
+
       - name: Install meta ArgoCD Application
         run: |
-          git clone https://github.com/cedi-dev/k8s-manifests.git
           cd k8s-manifests
           kubectl apply -f argo-apps/k8s-cedi-dev.yaml
