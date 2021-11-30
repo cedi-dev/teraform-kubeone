@@ -8,9 +8,9 @@ metadata:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: github-secret
+  name: argocd-secret
   namespace: argocd
 type: Opaque
 data:
-  github.oauth.clientID: ${GITHUB_OIDC_CLIENT_ID}
-  github.oauth.clientSecret: ${GITHUB_OIDC_CLIENT_SECRET}
+  dex.oauth.clientID: ${GITHUB_OIDC_CLIENT_ID}
+  dex.oauth.clientSecret: ${GITHUB_OIDC_CLIENT_SECRET}
