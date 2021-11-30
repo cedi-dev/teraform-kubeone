@@ -122,7 +122,6 @@ addons:
   # https://docs.kubermatic.com/kubeone/v1.3/guides/addons/
   addons:
     - name: cluster-autoscaler
-    - name: argocd
 
 # If the cluster runs on bare metal or an unsupported cloud provider,
 # you can disable the machine-controller deployment entirely. In this

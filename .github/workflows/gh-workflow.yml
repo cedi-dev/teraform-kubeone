@@ -229,6 +229,7 @@ jobs:
       - name: Install meta ArgoCD Application
         run: |
           git clone https://github.com/cedi-dev/k8s-manifests.git &&
+          helm upgrade --install argocd ./k8s-manifests/charts/argocd/ -f ./k8s-manifests/charts/argocd/values.yaml -n argocd
           kubectl apply -f k8s-manifests/argo-apps/k8s-cedi-dev.yaml
         env:
           KUBECONFIG: ./kubeconfig
