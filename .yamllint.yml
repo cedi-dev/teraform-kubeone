@@ -1,5 +1,6 @@
 extends: relaxed
 
-line-length: disable
+line-length:
+   max: 10000 # sorry, I really don't care for too ling lines...
 new-line-at-end-of-file:
   level: warning
