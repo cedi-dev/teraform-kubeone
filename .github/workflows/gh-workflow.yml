@@ -226,23 +226,10 @@ jobs:
         env:
           KUBECONFIG: ./kubeconfig
 
-      - name: Template fip-controller secrets
-        run: |
-          envsubst < ./manifests/fip-controller_secret.yaml.tpl > ./fip-controller_secret.yaml
-        env:
-          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
-
-      - name: Apply fip-controller secrets
-        run: kubectl apply -f ./fip-controller_secret.yaml
-        env:
-          KUBECONFIG: ./kubeconfig
-
-      - name: Clone ArgoCD Repo
-        uses: actions/checkout@master
-        with:
-          repository: cedi-dev/k8s-manifests
-
       - name: Install meta ArgoCD Application
         run: |
+          git clone https://github.com/cedi-dev/k8s-manifests.git
           cd k8s-manifests
           kubectl apply -f argo-apps/k8s-cedi-dev.yaml
+        env:
+          KUBECONFIG: ./kubeconfig
