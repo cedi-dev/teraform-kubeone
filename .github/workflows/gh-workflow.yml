@@ -226,6 +226,18 @@ jobs:
         env:
           KUBECONFIG: ./kubeconfig
 
+      - name: Template ArgoCD OAuth Secrets
+        run: |
+          envsubst < ./manifests/argocd.yaml.tpl > ./argocd.yaml
+        env:
+          GITHUB_OIDC_CLIENT_ID: ${{ secrets.GITHUB_OIDC_CLIENT_ID }}
+          GITHUB_OIDC_CLIENT_SECRET: ${{ secrets.GITHUB_OIDC_CLIENT_SECRET }}
+
+      - name: Apply Hetzner ArgoCD OAuth Secrets
+        run: kubectl apply -f ./argocd.yaml
+        env:
+          KUBECONFIG: ./kubeconfig
+
       - name: Install meta ArgoCD Application
         run: |
           git clone https://github.com/cedi-dev/k8s-manifests.git &&
