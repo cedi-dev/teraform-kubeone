@@ -25,3 +25,14 @@ resource "hcloud_load_balancer" "load_balancer" {
     "role"                 = "lb"
   }
 }
+
+resource "hcloud_load_balancer" "dns_lb" {
+  name               = "${var.cluster_name}-dns-lb"
+  load_balancer_type = var.lb_type
+  location           = var.datacenter
+
+  labels = {
+    "kubeone_cluster_name" = var.cluster_name
+    "role"                 = "lb"
+  }
+}
