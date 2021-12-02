@@ -13,3 +13,4 @@ metadata:
   namespace: external-dns
 data:
   HZ_DNS_TOKEN: ${HDNS_TOKEN}
+

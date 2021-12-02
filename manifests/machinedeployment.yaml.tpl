@@ -45,3 +45,4 @@ spec:
             distUpgradeOnBoot: false
       versions:
         kubelet: "${CLUSTER_VERSION}"
+
