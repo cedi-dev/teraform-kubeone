@@ -134,7 +134,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Setup Kubeone
-        uses: cedi/gh-action-kubeone@v1
+        uses: cedi-dev/gh-action-kubeone@master
         with:
           version: main
 
