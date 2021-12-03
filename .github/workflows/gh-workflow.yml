@@ -133,11 +133,6 @@ jobs:
     needs: terraform
     if: github.ref == 'refs/heads/main'
     steps:
-      - name: Setup Kubeone
-        uses: cedi-dev/gh-action-kubeone@main
-        with:
-          version: main
-
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -163,10 +158,17 @@ jobs:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
       - name: KubeOne Apply
-        run: kubeone apply --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json --auto-approve
+        uses: cedi/gh-action-kubeone@main
+        with:
+          version: main
+          command: apply
+          args: --auto-approve
 
       - name: KubeOne Status
-        run: kubeone status --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json
+        uses: cedi/gh-action-kubeone@main
+        with:
+          version: main
+          command: status
 
   kubectl:
     name: "[kubectl] Apply initial configuration"
@@ -174,11 +176,6 @@ jobs:
     needs: kubeone
     if: github.ref == 'refs/heads/main'
     steps:
-      - name: Setup Kubeone
-        uses: cedi/gh-action-kubeone@v1
-        with:
-          version: main
-
       - name: Install kubectl
         run: |
           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
@@ -211,7 +208,11 @@ jobs:
           if_key_exists: replace
 
       - name: Obtain kubeconfig
-        run: kubeone kubeconfig --manifest kubeone.yaml --credentials credentials.yaml --tfjson output.json > kubeconfig
+        uses: cedi/gh-action-kubeone@main
+        with:
+          version: main
+          command: kubeconfig
+          args: "> kubeconfig"
 
       - name: Archive kubeconfig
         uses: actions/upload-artifact@v2
