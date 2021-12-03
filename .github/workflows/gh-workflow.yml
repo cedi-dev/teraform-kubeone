@@ -160,14 +160,14 @@ jobs:
       - name: KubeOne Apply
         uses: cedi/gh-action-kubeone@main
         with:
-          version: main
+          version: master
           command: apply
           args: --auto-approve
 
       - name: KubeOne Status
         uses: cedi/gh-action-kubeone@main
         with:
-          version: main
+          version: master
           command: status
 
   kubectl:
@@ -210,7 +210,7 @@ jobs:
       - name: Obtain kubeconfig
         uses: cedi/gh-action-kubeone@main
         with:
-          version: main
+          version: master
           command: kubeconfig
           args: "> kubeconfig"
 
