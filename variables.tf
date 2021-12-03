@@ -1,3 +1,7 @@
+variable "dns_domain" {
+  description = "The TLD for the DNS Zone"
+}
+
 variable "cluster_name" {
   description = "prefix for cloud resources"
 }

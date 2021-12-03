@@ -1,10 +1,10 @@
-resource "hetznerdns_zone" "av0_de" {
-  name = "av0.de"
+resource "hetznerdns_zone" "dns" {
+  name = var.dns_domain
   ttl  = 60
 }
 
-resource "hetznerdns_record" "av0_de_api" {
-  zone_id = hetznerdns_zone.av0_de.id
+resource "hetznerdns_record" "dns_api" {
+  zone_id = hetznerdns_zone.dns.id
   name    = "api"
   count   = var.control_plane_replicas
   value   = element(hcloud_server.control_plane.*.ipv4_address, count.index)
