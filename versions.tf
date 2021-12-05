@@ -14,7 +14,7 @@ terraform {
     organization = "cedi"
 
     workspaces {
-      name = "k8s-cedi-dev"
+      name = "k8s-av0-de"
     }
   }
 }

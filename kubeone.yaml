@@ -1,7 +1,7 @@
 ---
 apiVersion: kubeone.io/v1beta1
 kind: KubeOneCluster
-name: k8s-cedi-dev
+name: k8s-av0-de
 
 versions:
   kubernetes: "1.21.3"
