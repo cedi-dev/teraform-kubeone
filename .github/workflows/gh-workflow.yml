@@ -268,6 +268,6 @@ jobs:
           # install argocd
           helm upgrade --install argocd ./k8s-manifests/charts/argocd/ -f ./k8s-manifests/charts/argocd/values.yaml -n argocd
           # install meta argocd application, referencing the repo itself for auto updates
-          kubectl apply -f k8s-manifests/argo-apps/k8s-cedi-dev.yaml
+          kubectl apply -f k8s-manifests/argo-apps/k8s-av0-de.yaml
         env:
           KUBECONFIG: ./kubeconfig
