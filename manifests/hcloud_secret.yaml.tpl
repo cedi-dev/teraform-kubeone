@@ -6,3 +6,4 @@ metadata:
   namespace: external-dns
 data:
   HZ_DNS_TOKEN: ${HDNS_TOKEN}
+  cloudflare_api_token: ${CF_API_TOKEN}
