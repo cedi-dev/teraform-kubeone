@@ -1,4 +1,3 @@
----
 apiVersion: "cluster.k8s.io/v1alpha1"
 kind: MachineDeployment
 metadata:
@@ -45,4 +44,3 @@ spec:
             distUpgradeOnBoot: false
       versions:
         kubelet: "${CLUSTER_VERSION}"
-
