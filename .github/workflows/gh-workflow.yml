@@ -161,14 +161,14 @@ jobs:
       - name: KubeOne Apply
         uses: cedi/gh-action-kubeone@main
         with:
-          version: 1c181aaa59378260169e8e0081780cc247173bb3
+          version: 152cc4fa5244b263eab5aab6cfabfdea8e494d4c
           command: apply
           args: --auto-approve --verbose
 
       - name: KubeOne Status
         uses: cedi/gh-action-kubeone@main
         with:
-          version: 1c181aaa59378260169e8e0081780cc247173bb3
+          version: 152cc4fa5244b263eab5aab6cfabfdea8e494d4c
           command: status
 
   kubectl:
@@ -211,7 +211,7 @@ jobs:
       - name: Obtain kubeconfig
         uses: cedi/gh-action-kubeone@main
         with:
-          version: 1c181aaa59378260169e8e0081780cc247173bb3
+          version: 152cc4fa5244b263eab5aab6cfabfdea8e494d4c
           command: kubeconfig
           args: "> kubeconfig"
 
