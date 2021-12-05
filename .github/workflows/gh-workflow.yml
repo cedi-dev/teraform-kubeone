@@ -252,11 +252,6 @@ jobs:
         env:
           KUBECONFIG: ./kubeconfig
 
-      - name: Apply Hetzner ArgoCD OAuth Secrets
-        run: kubectl apply -f ./argocd.yaml
-        env:
-          KUBECONFIG: ./kubeconfig
-
       - name: Install meta ArgoCD Application
         run: |
           git clone https://github.com/cedi-dev/k8s-manifests.git
