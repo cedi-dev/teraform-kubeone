@@ -163,7 +163,7 @@ jobs:
         with:
           version: master
           command: apply
-          args: --auto-approve
+          args: --auto-approve --verbose
 
       - name: KubeOne Status
         uses: cedi/gh-action-kubeone@main
