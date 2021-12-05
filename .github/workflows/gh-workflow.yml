@@ -9,16 +9,12 @@ on:
     inputs:
       kubeconfig:
         description: 'Generate Kubeconfig'
-        required: true
+        required: false
         default: 'false'
       verbose:
         description: 'run KubeOne with verbose output'
         required: false
         default: 'false'
-      k1version:
-        description: 'Which KubeOne version to use'
-        required: false
-        default: 'v1.3.2'
 
 jobs:
   lint:
@@ -170,22 +166,22 @@ jobs:
         uses: cedi/gh-action-kubeone@main
         if: github.event.inputs.verbose != 'true'
         with:
-          version: ${{ github.events.input.k1version }}
+          version: master
           command: apply
           args: --auto-approve
 
-      - name: KubeOne Apply
+      - name: KubeOne Apply (verbose)
         uses: cedi/gh-action-kubeone@main
         if: github.event.inputs.verbose == 'true'
         with:
-          version: ${{ github.events.input.k1version }}
+          version: master
           command: apply
           args: --auto-approve --verbose
 
       - name: KubeOne Status
         uses: cedi/gh-action-kubeone@main
         with:
-          version: ${{ github.events.input.k1version }}
+          version: master
           command: status
 
   kubectl:
@@ -228,7 +224,7 @@ jobs:
       - name: Obtain kubeconfig
         uses: cedi/gh-action-kubeone@main
         with:
-          version: ${{ github.events.input.k1version }}
+          version: master
           command: kubeconfig
           args: "> kubeconfig"
 
