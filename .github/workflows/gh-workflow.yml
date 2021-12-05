@@ -11,6 +11,14 @@ on:
         description: 'Generate Kubeconfig'
         required: true
         default: 'false'
+      verbose:
+        description: 'run KubeOne with verbose output'
+        required: false
+        default: 'false'
+      k1version:
+        description: 'Which KubeOne version to use'
+        required: false
+        default: 'v1.3.2'
 
 jobs:
   lint:
@@ -160,15 +168,24 @@ jobs:
 
       - name: KubeOne Apply
         uses: cedi/gh-action-kubeone@main
+        if: github.event.inputs.verbose != 'true'
         with:
-          version: v1.3.2
+          version: ${{ github.events.input.k1version }}
+          command: apply
+          args: --auto-approve
+
+      - name: KubeOne Apply
+        uses: cedi/gh-action-kubeone@main
+        if: github.event.inputs.verbose == 'true'
+        with:
+          version: ${{ github.events.input.k1version }}
           command: apply
           args: --auto-approve --verbose
 
       - name: KubeOne Status
         uses: cedi/gh-action-kubeone@main
         with:
-          version: v1.3.2
+          version: ${{ github.events.input.k1version }}
           command: status
 
   kubectl:
@@ -211,13 +228,13 @@ jobs:
       - name: Obtain kubeconfig
         uses: cedi/gh-action-kubeone@main
         with:
-          version: v1.3.2
+          version: ${{ github.events.input.k1version }}
           command: kubeconfig
           args: "> kubeconfig"
 
       - name: Archive kubeconfig
         uses: actions/upload-artifact@v2
-        if: ${{ github.event.inputs.kubeconfig == 'true' }}
+        if: github.event.inputs.kubeconfig == 'true'
         with:
           name: kubeconfig
           path: kubeconfig
