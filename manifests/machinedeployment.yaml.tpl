@@ -1,7 +1,7 @@
 apiVersion: "cluster.k8s.io/v1alpha1"
 kind: MachineDeployment
 metadata:
-  name: "${CLUSTER_NAME}-cx11"
+  name: "${CLUSTER_NAME}-cx21"
   namespace: "kube-system"
   annotations:
     cluster.k8s.io/cluster-api-autoscaler-node-group-min-size: "1"
@@ -33,7 +33,7 @@ spec:
         value:
           cloudProvider: "hetzner"
           cloudProviderSpec:
-            serverType: "cx11"
+            serverType: "cx21"
             location: "fsn1"
             image: "ubuntu-20.04"
             # Optional: network IDs or names
