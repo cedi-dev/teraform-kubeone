@@ -255,16 +255,10 @@ jobs:
       - name: Install meta ArgoCD Application
         run: |
           git clone https://github.com/cedi-dev/k8s-manifests.git
-          helm repo add argo-cd https://argoproj.github.io/argo-helm
           helm repo add prometheus https://prometheus-community.github.io/helm-charts
           pushd ./k8s-manifests/charts/argocd/
           helm dependency update && helm dependency build
           popd
-          pushd ./k8s-manifests/charts/kube-prometheus-stack/
-          helm dependency update && helm dependency build
-          popd
-          # install kube-prometheus-stack
-          helm upgrade --install prometheus-stack ./k8s-manifests/charts/kube-prometheus-stack/ -f ./k8s-manifests/charts/kube-prometheus-stack/values.yaml -n monitoring
           # install argocd
           helm upgrade --install argocd ./k8s-manifests/charts/argocd/ -f ./k8s-manifests/charts/argocd/values.yaml -n argocd
           # install meta argocd application, referencing the repo itself for auto updates
