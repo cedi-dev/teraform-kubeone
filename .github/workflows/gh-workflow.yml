@@ -47,7 +47,13 @@ jobs:
           envsubst < ./manifests/hcloud_secret.yaml.tpl > ./hcloud_secret.yaml
         env:
           HDNS_TOKEN: ${{ secrets.HDNS_TOKEN }}
-          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+
+      - name: Template Helm Secrets
+        run: |
+          envsubst < ./manifests/helm_secret.yaml.tpl > ./helm_secret.yaml
+        env:
+          AGE_PRIVATE_KEY: ${{ secrets.AGE_PRIVATE_KEY }}
+          AGE_PUBLIC_KEY: ${{ secrets.AGE_PUBLIC_KEY }}
 
       - uses: ibiqlik/action-yamllint@v3
         with:
@@ -245,10 +251,21 @@ jobs:
           envsubst < ./manifests/hcloud_secret.yaml.tpl > ./hcloud_secret.yaml
         env:
           HDNS_TOKEN: ${{ secrets.HDNS_TOKEN }}
-          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
 
       - name: Apply Hetzner API Secrets
         run: kubectl apply -f ./hcloud_secret.yaml
+        env:
+          KUBECONFIG: ./kubeconfig
+
+      - name: Template Helm Secrets
+        run: |
+          envsubst < ./manifests/helm_secret.yaml.tpl > ./helm_secret.yaml
+        env:
+          AGE_PRIVATE_KEY: ${{ secrets.AGE_PRIVATE_KEY }}
+          AGE_PUBLIC_KEY: ${{ secrets.AGE_PUBLIC_KEY }}
+
+      - name: Apply Helm Secrets
+        run: kubectl apply -f ./helm_secret.yaml
         env:
           KUBECONFIG: ./kubeconfig
 
