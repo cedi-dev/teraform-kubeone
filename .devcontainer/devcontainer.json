@@ -20,6 +20,13 @@
 		"editor.formatOnSave": true,
 		"editor.renderFinalNewline": true,
 		"editor.codeLens": true,
+		"editor.guides.bracketPairs": true,
+		"editor.bracketPairColorization.enabled": true,
+		"editor.guides.highlightActiveIndentation": true,
+		"editor.guides.bracketPairsHorizontal": "active",
+		"indentRainbow.includedLanguages": [
+			"yaml"
+		],
 		"terraform.languageServer": {
 			"external": true,
 			"pathToBinary": "/usr/local/bin/terraform-ls",
@@ -37,10 +44,11 @@
 	"extensions": [
 		"ms-azuretools.vscode-docker",
 		"davidanson.vscode-markdownlint",
-		"hashicorp.terraform",
 		"shardulm94.trailing-spaces",
 		"github.vscode-pull-request-github",
 		"eamodio.gitlens",
+		"oderwat.indent-rainbow", // I hate to install this plugin only to show colors in yaml documents... I would prefer to use `"editor.bracketPairColorization.enabled": true,` like everywhere else...
+		"aaron-bond.better-comments",
 	],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [9000],
