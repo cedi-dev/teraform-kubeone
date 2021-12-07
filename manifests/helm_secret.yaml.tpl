@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Secret
 type: Opaque
 metadata:
-  name: cloud-provider-credentials
+  name: helm-secrets
   namespace: argocd
 data:
   age_private_key: ${AGE_PRIVATE_KEY}
