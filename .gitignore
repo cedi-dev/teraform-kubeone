@@ -70,3 +70,4 @@ k8s-cedi-dev-kubeconfig
 k8s-cedi-dev.tar.gz
 output.json
 kubeconfig
+helm_secret.yaml
