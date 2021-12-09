@@ -276,6 +276,8 @@ jobs:
           pushd ./k8s-manifests/charts/argocd/
           helm dependency update && helm dependency build
           popd
+          # install prometheus-operator's ServiceMonitor CRD
+          kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/9c0db5656f04e005de6a0413fd8eb8f11ec99757/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
           # install argocd
           helm upgrade --install argocd ./k8s-manifests/charts/argocd/ -f ./k8s-manifests/charts/argocd/values.yaml -n argocd
           # install meta argocd application, referencing the repo itself for auto updates
