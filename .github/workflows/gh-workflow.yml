@@ -21,6 +21,8 @@ jobs:
     name: "Lint Configuration"
     runs-on: ubuntu-latest
     steps:
+      - uses: av0de/gh-action-install-kubeval@main
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
@@ -35,22 +37,22 @@ jobs:
           export NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r < output.json`
           export CLUSTER_NAME=`jq '.kubeone_hosts.value.control_plane.cluster_name' -r < output.json`
           export CLUSTER_VERSION=`yq e -j < kubeone.yaml | jq '.versions.kubernetes' -r`
-          envsubst < ./manifests/machinedeployment.yaml.tpl > ./machinedeployment.yaml
+          envsubst < ./manifests/machinedeployment.yaml.tpl > ./manifests/machinedeployment.yaml
 
       - name: Template credentials file
-        run: envsubst < ./manifests/credentials.yaml.tpl > ./credentials.yaml
+        run: envsubst < ./manifests/credentials.yaml.tpl > ./manifests/credentials.yaml
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
       - name: Template Hetzner API Secrets
         run: |
-          envsubst < ./manifests/hcloud_secret.yaml.tpl > ./hcloud_secret.yaml
+          envsubst < ./manifests/hcloud_secret.yaml.tpl > ./manifests/hcloud_secret.yaml
         env:
           HDNS_TOKEN: ${{ secrets.HDNS_TOKEN }}
 
       - name: Template Helm Secrets
         run: |
-          envsubst < ./manifests/helm_secret.yaml.tpl > ./helm_secret.yaml
+          envsubst < ./manifests/helm_secret.yaml.tpl > ./manifests/helm_secret.yaml
         env:
           AGE_PRIVATE_KEY: ${{ secrets.AGE_PRIVATE_KEY }}
           AGE_PUBLIC_KEY: ${{ secrets.AGE_PUBLIC_KEY }}
@@ -60,6 +62,14 @@ jobs:
           file_or_dir: .
           format: standard
           config_file: .yamllint.yml
+
+      - name: Kubeval
+        run: |
+          for manifest in ./manifests/*.yaml
+          do
+            echo "$manifests"
+            kubeval --ignore-missing-schemas --strict $manifest
+          done
 
       - name: Terraform format check
         run: terraform fmt -check
