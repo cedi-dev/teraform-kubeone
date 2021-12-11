@@ -40,7 +40,7 @@ jobs:
           envsubst < ./manifests/machinedeployment.yaml.tpl > ./manifests/machinedeployment.yaml
 
       - name: Template credentials file
-        run: envsubst < ./manifests/credentials.yaml.tpl > ./manifests/credentials.yaml
+        run: envsubst < ./manifests/credentials.yaml.tpl > ./credentials.yaml
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
