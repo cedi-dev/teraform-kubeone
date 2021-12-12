@@ -34,7 +34,7 @@ spec:
           cloudProvider: "hetzner"
           cloudProviderSpec:
             serverType: "cx21"
-            location: "fsn1"
+            location: "${DATACENTER_LOCATION}"
             image: "ubuntu-20.04"
             # Optional: network IDs or names
             networks:
@@ -42,5 +42,9 @@ spec:
           operatingSystem: "ubuntu"
           operatingSystemSpec:
             distUpgradeOnBoot: false
+          sshPublicKeys:
+            - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKKQwlVWSGICyOiVryEdEp8bR+ltCxSeikxPTRRgSssL cedi@ivy
+            - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC0YM2rlsOXq9OLCMynkPSn6sFkGGOWS9/p5rbcS/OUX cedi@ava
+            - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBW7KOtsdmhDszm0qaKdtxExNQqNnl6zJLz1vKRmmod2 cedi@liv
       versions:
         kubelet: "${CLUSTER_VERSION}"

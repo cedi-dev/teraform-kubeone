@@ -32,11 +32,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Terraform Output
+        run: terraform output -json > output.json
+
       - name: Template machine-deployment file
         run: |
-          export NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r < output.json`
-          export CLUSTER_NAME=`jq '.kubeone_hosts.value.control_plane.cluster_name' -r < output.json`
-          export CLUSTER_VERSION=`yq e -j < kubeone.yaml | jq '.versions.kubernetes' -r`
+          export NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r  output.json`
+          export CLUSTER_NAME=`jq '.kubeone_hosts.value.control_plane.cluster_name' -r  output.json`
+          export CLUSTER_VERSION=`yq e -j  kubeone.yaml | jq '.versions.kubernetes' -r`
+          export DATACENTER_LOCATION=`jq -r '.control_plane_info.value.location' output.json`
           envsubst < ./manifests/machinedeployment.yaml.tpl > ./manifests/machinedeployment.yaml
 
       - name: Template credentials file
@@ -249,7 +253,14 @@ jobs:
           export NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r < output.json`
           export CLUSTER_NAME=`jq '.kubeone_hosts.value.control_plane.cluster_name' -r < output.json`
           export CLUSTER_VERSION=`yq e -j < kubeone.yaml | jq '.versions.kubernetes' -r`
+          export DATACENTER_LOCATION=`jq -r '.control_plane_info.value.location' output.json`
           envsubst < ./manifests/machinedeployment.yaml.tpl > ./machinedeployment.yaml
+
+      - name: Archive machine-deployment file
+        uses: actions/upload-artifact@v2
+        with:
+          name: machinedeployment.yaml
+          path: machinedeployment.yaml
 
       - name: Apply MachineDeployment
         run: kubectl apply -f ./machinedeployment.yaml

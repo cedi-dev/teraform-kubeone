@@ -23,3 +23,13 @@ output "kubeone_hosts" {
     }
   }
 }
+
+output "control_plane_info" {
+  description = "Control plane informations"
+
+  value = {
+    image    = var.image
+    location = var.datacenter
+    ssh_kehs = hcloud_ssh_key.*.public_key
+  }
+}
