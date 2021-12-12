@@ -278,19 +278,3 @@ jobs:
         run: kubectl apply -f ./helm_secret.yaml
         env:
           KUBECONFIG: ./kubeconfig
-
-      - name: Install meta ArgoCD Application
-        run: |
-          git clone https://github.com/cedi-dev/k8s-manifests.git
-          helm repo add argo-cd https://argoproj.github.io/argo-helm
-          pushd ./k8s-manifests/charts/argocd/
-          helm dependency update && helm dependency build
-          popd
-          # install prometheus-operator's ServiceMonitor CRD
-          kubectl apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/9c0db5656f04e005de6a0413fd8eb8f11ec99757/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
-          # install argocd
-          helm upgrade --install argocd ./k8s-manifests/charts/argocd/ -f ./k8s-manifests/charts/argocd/values.yaml -n argocd
-          # install meta argocd application, referencing the repo itself for auto updates
-          kubectl apply -f k8s-manifests/argo-apps/k8s-av0-de.yaml
-        env:
-          KUBECONFIG: ./kubeconfig
