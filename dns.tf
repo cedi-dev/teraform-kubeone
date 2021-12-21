@@ -9,5 +9,5 @@ resource "hetznerdns_record" "dns_api" {
   count   = var.control_plane_replicas
   value   = element(hcloud_server.control_plane.*.ipv4_address, count.index)
   type    = "A"
-  ttl     = 5
+  ttl     = 600
 }
