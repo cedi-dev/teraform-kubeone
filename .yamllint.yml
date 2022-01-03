@@ -10,3 +10,4 @@ rules:
 
 ignore: |
   .yamllint.yml
+  kustomize/bases/*/charts/**
