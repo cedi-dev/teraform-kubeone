@@ -333,5 +333,4 @@ jobs:
           commit-message: "bump machine deployment from ${{ env.GITHUB_REPOSITORY }} ${{ env.GITHUB_ACTION }} caused by ${{ env.GITHUB_EVENT_NAME }}"
           add-paths: manifests/machinedeployment/cpx31.yaml
           assignees: cedi
-          reviewers: cedi
           labels: ci-automation
