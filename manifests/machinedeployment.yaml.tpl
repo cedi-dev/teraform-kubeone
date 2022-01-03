@@ -33,6 +33,8 @@ spec:
         value:
           cloudProvider: "hetzner"
           cloudProviderSpec:
+            labels:
+              role: worker
             serverType: "cx21"
             location: "${DATACENTER_LOCATION}"
             image: "ubuntu-20.04"

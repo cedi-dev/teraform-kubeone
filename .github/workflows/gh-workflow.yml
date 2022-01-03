@@ -96,7 +96,6 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          # terraform_version: 0.13.0:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
           terraform_wrapper: false
 
@@ -110,7 +109,8 @@ jobs:
         run: terraform plan -no-color
         continue-on-error: true
 
-      - uses: actions/github-script@0.9.0
+      - name: Augment PR with terraform plan infos
+        uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
         env:
           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
@@ -293,3 +293,45 @@ jobs:
         run: kubectl apply -f ./helm_secret.yaml
         env:
           KUBECONFIG: ./kubeconfig
+
+  machinedeployment:
+    name: "Deploy Machinedeployment yaml to k8s-manifest repo"
+    runs-on: ubuntu-latest
+    needs: kubectl
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout k8s-manifests repo
+        uses: actions/checkout@v2
+        with:
+          # Repository name with owner. For example, actions/checkout
+          # Default: ${{ github.repository }}
+          repository: "av0de/k8s-manifests"
+          token: "${{ secrets.DEPLOY_GH_KEY }}"
+
+      - name: Configure git user
+        run: |
+          git config user.name 'cedi'
+          git config user.email 'cedi@users.noreply.github.com'
+
+      - name: Download machinedeployment
+        uses: actions/download-artifact@v2
+        with:
+          name: machinedeployment.yaml
+
+      - name: move machinedeployment.yaml to right place
+        run: |
+          mv ./machinedeployment.yaml ./manifests/machinedeployment/cpx31.yaml
+
+      - name: Create Pullrequest
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: "${{ secrets.DEPLOY_GH_KEY }}"
+          title: "Update machinedeployment"
+          base: main
+          branch: "machinedeployment/$GITHUB_ACTION"
+          delete-branch: true
+          commit-message: "bump machine deployment from $GITHUB_REPOSITORY $GITHUB_ACTION caused by $GITHUB_EVENT_NAME"
+          add-paths: manifests/machinedeployment/cpx31.yaml
+          assignees: cedi
+          reviewers: cedi
+          labels: ci-automation
