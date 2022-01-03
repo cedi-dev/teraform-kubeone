@@ -35,10 +35,10 @@ spec:
           cloudProviderSpec:
             labels:
               role: worker
+              kubeone_cluster_name: "${CLUSTER_NAME}"
             serverType: "cpx31"
             location: "${DATACENTER_LOCATION}"
             image: "ubuntu-20.04"
-            # Optional: network IDs or names
             networks:
               - "${NETWORK_ID}"
           operatingSystem: "ubuntu"
