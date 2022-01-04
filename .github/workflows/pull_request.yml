@@ -109,7 +109,7 @@ jobs:
             })
 
   lint_terraform:
-    name: "Lint yaml manifests"
+    name: "Lint terraform code"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
