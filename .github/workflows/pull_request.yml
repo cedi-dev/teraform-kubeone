@@ -90,7 +90,9 @@ jobs:
             const output = `#### Kubeval: 📖\`${{ steps.kubeval.outcome }}\`
             <details><summary>Show results</summary>
 
-            \`\`\`${{ steps.kubeval.outputs.kubeval }}\`\`\`
+            \`\`\`
+            ${{ steps.kubeval.outputs.kubeval }}
+            \`\`\`
 
             </details>
 
@@ -164,13 +166,16 @@ jobs:
 
       - name: Augment PR with terraform format infos
         uses: actions/github-script@0.9.0
+        if: steps.validate.outcome != 'success'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const output = `#### terraform validate: 📖\`${{ steps.validate.outcome }}\`
             <details><summary>Show results</summary>
 
-            \`\`\`${{ steps.validate.outputs.validate }}\`\`\`
+            \`\`\`
+            ${{ steps.validate.outputs.validate }}
+            \`\`\`
 
             </details>
 
@@ -221,7 +226,9 @@ jobs:
             #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
             <details><summary>Show Plan</summary>
 
-            \`\`\`terraform ${{ steps.plan.outputs.tfplan }}\`\`\`
+            \`\`\`terraform
+            ${{ steps.plan.outputs.tfplan }}
+            \`\`\`
 
             </details>
 
