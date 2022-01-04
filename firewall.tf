@@ -71,4 +71,26 @@ resource "hcloud_firewall" "cluster" {
       "::/0",
     ]
   }
+
+  rule {
+    description = "allow hetzner api and metadata servers tcp"
+    direction   = "in"
+    protocol    = "tcp"
+    port        = "any"
+    source_ips = [
+      "169.254.169.254/32",
+      "213.239.246.1/32",
+    ]
+  }
+
+  rule {
+    description = "allow hetzner api and metadata servers udp"
+    direction   = "in"
+    protocol    = "udp"
+    port        = "any"
+    source_ips = [
+      "169.254.169.254/32",
+      "213.239.246.1/32",
+    ]
+  }
 }
