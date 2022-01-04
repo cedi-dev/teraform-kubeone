@@ -15,6 +15,7 @@ resource "hcloud_firewall" "cluster" {
     protocol    = "icmp"
     source_ips = [
       "0.0.0.0/0",
+      "::/0",
     ]
   }
 
@@ -45,6 +46,7 @@ resource "hcloud_firewall" "cluster" {
     port        = "22"
     source_ips = [
       "0.0.0.0/0",
+      "::/0",
     ]
   }
 
@@ -55,6 +57,7 @@ resource "hcloud_firewall" "cluster" {
     port        = "30000-32767"
     source_ips = [
       "0.0.0.0/0",
+      "::/0",
     ]
   }
 }
