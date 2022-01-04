@@ -60,4 +60,15 @@ resource "hcloud_firewall" "cluster" {
       "::/0",
     ]
   }
+
+  rule {
+    description = "allow kubeconfig from any"
+    direction   = "in"
+    protocol    = "tcp"
+    port        = "6443"
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0",
+    ]
+  }
 }
