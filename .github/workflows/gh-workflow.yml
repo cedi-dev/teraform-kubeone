@@ -106,14 +106,14 @@ jobs:
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
-        run: terraform plan -no-color
+        run: |
+          terraform plan -no-color | tee plan.log
+          echo "::set-output name=tfplan::$(sed ':a;N;$!ba;s/\n/{newline}/g' < plan.log)"
         continue-on-error: true
 
       - name: Augment PR with terraform plan infos
         uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
-        env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -121,15 +121,19 @@ jobs:
             #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
             #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
             <details><summary>Show Plan</summary>
-            \`\`\`${process.env.PLAN}\`\`\`
+
+            \`\`\`terraform ${{ steps.plan.outputs.tfplan }}\`\`\`
+
             </details>
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+            new_output = output.replace(/{newline}/g, "\n");
 
             github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: output
+              body: new_output
             })
 
       - name: Terraform Plan Status
