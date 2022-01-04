@@ -22,17 +22,17 @@ spec:
     metadata:
       labels:
         node: "${CLUSTER_NAME}"
-    env:
-      - name: HZ_TOKEN
-        valueFrom:
-          secretKeyRef:
-            name: cloud-provider-credentials
-            key: HZ_TOKEN
     spec:
       providerSpec:
         value:
           cloudProvider: "hetzner"
           cloudProviderSpec:
+            # If empty, can be set via HZ_TOKEN env var
+            token:
+              secretKeyRef:
+                namespace: kube-system
+                name: cloud-provider-credentials
+                key: HZ_TOKEN
             labels:
               role: worker
               kubeone_cluster_name: "${CLUSTER_NAME}"
