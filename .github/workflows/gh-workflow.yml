@@ -125,7 +125,9 @@ jobs:
             \`\`\`terraform ${{ steps.plan.outputs.tfplan }}\`\`\`
 
             </details>
-            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+            _Pusher:_ @${{ github.actor }},
+            _Action:_ \`${{ github.event_name }}\``;
 
             new_output = output.replace(/{newline}/g, "\n");
 
