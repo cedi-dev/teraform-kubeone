@@ -4,27 +4,39 @@ on:
   pull_request:
 
 jobs:
-  lint:
-    name: "Lint Configuration"
+  lint_manifests:
+    name: "Lint yaml manifests"
     runs-on: ubuntu-latest
     steps:
       - uses: av0de/gh-action-install-kubeval@main
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-          terraform_wrapper: false
-
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Terraform Init
-        id: init
-        run: terraform init
-
       - name: Terraform Output
-        run: terraform output -json > output.json
+        run: |
+          cat << EOF > output.json
+          {
+            "control_plane_info": {
+              "value": {
+                "location": "nbg1"
+              }
+            },
+            "kubeone_api": {
+              "value": {
+                "endpoint": "api.av0.de"
+              }
+            },
+            "kubeone_hosts": {
+              "value": {
+                "control_plane": {
+                  "cluster_name": "test",
+                  "network_id": "12345"
+                }
+              }
+            }
+          }
+          EOF
 
       - name: Template machine-deployment file
         run: |
@@ -76,9 +88,9 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const output = `#### Kubeval: 📖\`${{ steps.kubeval.outcome }}\`
-            <details><summary>Show kubeval results</summary>
+            <details><summary>Show results</summary>
 
-            \`\`\`terraform ${{ steps.kubeval.outputs.kubeval }}\`\`\`
+            \`\`\`${{ steps.kubeval.outputs.kubeval }}\`\`\`
 
             </details>
 
@@ -94,6 +106,23 @@ jobs:
               body: new_output
             })
 
+  lint_terraform:
+    name: "Lint yaml manifests"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_wrapper: false
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
       - name: Terraform format check
         id: tffmt
         continue-on-error: true
@@ -103,13 +132,14 @@ jobs:
 
       - name: Augment PR with terraform format infos
         uses: actions/github-script@0.9.0
+        if: steps.tffmt.outcome != 'success'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `#### Kubeval: 📖\`${{ steps.tffmt.outcome }}\`
-            <details><summary>Show kubeval results</summary>
+            const output = `#### terraform fmt -check: 📖\`${{ steps.tffmt.outcome }}\`
+            <details><summary>Show results</summary>
 
-            \`\`\`terraform ${{ steps.tffmt.outputs.fmt }}\`\`\`
+            \`\`\`${{ steps.tffmt.outputs.fmt }}\`\`\`
 
             </details>
 
@@ -137,10 +167,10 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `#### Kubeval: 📖\`${{ steps.validate.outcome }}\`
-            <details><summary>Show kubeval results</summary>
+            const output = `#### terraform validate: 📖\`${{ steps.validate.outcome }}\`
+            <details><summary>Show results</summary>
 
-            \`\`\`terraform ${{ steps.validate.outputs.validate }}\`\`\`
+            \`\`\`${{ steps.validate.outputs.validate }}\`\`\`
 
             </details>
 
@@ -156,10 +186,10 @@ jobs:
               body: new_output
             })
 
-  terraform:
+  terraform_plan:
     name: "[Terraform] Deploy Infrastructure"
     runs-on: ubuntu-latest
-    needs: lint
+    needs: lint_terraform
     steps:
       - name: Checkout
         uses: actions/checkout@v2
