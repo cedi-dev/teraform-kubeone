@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
   workflow_dispatch:
     inputs:
       kubeconfig:
@@ -83,7 +82,7 @@ jobs:
         run: terraform fmt -check
 
       - name: Terraform Validate
-        run: terraform init && terraform validate
+        run: terraform validate
 
   terraform:
     name: "[Terraform] Deploy Infrastructure"
@@ -106,44 +105,9 @@ jobs:
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
-        run: |
-          terraform plan -no-color | tee plan.log
-          echo "::set-output name=tfplan::$(sed ':a;N;$!ba;s/\n/{newline}/g' < plan.log)"
-        continue-on-error: true
-
-      - name: Augment PR with terraform plan infos
-        uses: actions/github-script@0.9.0
-        if: github.event_name == 'pull_request'
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-            <details><summary>Show Plan</summary>
-
-            \`\`\`terraform ${{ steps.plan.outputs.tfplan }}\`\`\`
-
-            </details>
-
-            _Pusher:_ @${{ github.actor }},
-            _Action:_ \`${{ github.event_name }}\``;
-
-            new_output = output.replace(/{newline}/g, "\n");
-
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: new_output
-            })
-
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
+        run: terraform plan -no-color
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
 
       - name: Terraform Output
@@ -159,7 +123,6 @@ jobs:
     name: "[KubeOne] Provision K8s Cluster"
     runs-on: ubuntu-latest
     needs: terraform
-    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -211,7 +174,6 @@ jobs:
     name: "[kubectl] Apply initial configuration"
     runs-on: ubuntu-latest
     needs: kubeone
-    if: github.ref == 'refs/heads/main'
     steps:
       - name: Install kubectl
         run: |
@@ -304,7 +266,6 @@ jobs:
     name: "Deploy Machinedeployment yaml to k8s-manifest repo"
     runs-on: ubuntu-latest
     needs: kubectl
-    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout k8s-manifests repo
         uses: actions/checkout@v2

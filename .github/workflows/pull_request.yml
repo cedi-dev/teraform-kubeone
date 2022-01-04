@@ -1,0 +1,124 @@
+name: "Pullrequest validate"
+
+on:
+  pull_request:
+
+jobs:
+  lint:
+    name: "Lint Configuration"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: av0de/gh-action-install-kubeval@main
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_wrapper: false
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Output
+        run: terraform output -json > output.json
+
+      - name: Template machine-deployment file
+        run: |
+          export NETWORK_ID=`jq '.kubeone_hosts.value.control_plane.network_id' -r  output.json`
+          export CLUSTER_NAME=`jq '.kubeone_hosts.value.control_plane.cluster_name' -r  output.json`
+          export CLUSTER_VERSION=`yq e -j  kubeone.yaml | jq '.versions.kubernetes' -r`
+          export DATACENTER_LOCATION=`jq -r '.control_plane_info.value.location' output.json`
+          envsubst < ./manifests/machinedeployment.yaml.tpl > ./manifests/machinedeployment.yaml
+
+      - name: Template credentials file
+        run: envsubst < ./manifests/credentials.yaml.tpl > ./credentials.yaml
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+
+      - name: Template Hetzner API Secrets
+        run: |
+          envsubst < ./manifests/hcloud_secret.yaml.tpl > ./manifests/hcloud_secret.yaml
+        env:
+          HDNS_TOKEN: ${{ secrets.HDNS_TOKEN }}
+
+      - name: Template Helm Secrets
+        run: |
+          envsubst < ./manifests/helm_secret.yaml.tpl > ./manifests/helm_secret.yaml
+        env:
+          AGE_PRIVATE_KEY: ${{ secrets.AGE_PRIVATE_KEY }}
+          AGE_PUBLIC_KEY: ${{ secrets.AGE_PUBLIC_KEY }}
+
+      - uses: ibiqlik/action-yamllint@v3
+        with:
+          file_or_dir: .
+          format: standard
+          config_file: .yamllint.yml
+
+      - name: Kubeval
+        run: |
+          for manifest in ./manifests/*.yaml
+          do
+            echo "$manifests"
+            kubeval --ignore-missing-schemas --strict $manifest
+          done
+
+      - name: Terraform format check
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        run: terraform validate
+
+  terraform:
+    name: "[Terraform] Deploy Infrastructure"
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+          terraform_wrapper: false
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          terraform plan -no-color | tee plan.log
+          echo "::set-output name=tfplan::$(sed ':a;N;$!ba;s/\n/{newline}/g' < plan.log)"
+        continue-on-error: true
+
+      - name: Augment PR with terraform plan infos
+        uses: actions/github-script@0.9.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            <details><summary>Show Plan</summary>
+
+            \`\`\`terraform ${{ steps.plan.outputs.tfplan }}\`\`\`
+
+            </details>
+
+            __Author:__ @${{ github.actor }},
+            __Action:__ \`${{ github.event_name }}\``;
+
+            new_output = output.replace(/{newline}/g, "\n");
+
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: new_output
+            })
