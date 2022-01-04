@@ -65,10 +65,49 @@ jobs:
           AGE_PUBLIC_KEY: JHt7IHNlY3JldHMuQUdFX1BVQkxJQ19LRVkgfX0=
 
       - uses: ibiqlik/action-yamllint@v3
+        id: lint
+        continue-on-error: true
         with:
           file_or_dir: .
           format: standard
           config_file: .yamllint.yml
+
+      - name: single-line
+        id: lint-output
+        if: steps.lint.outcome != 'success'
+        run: |
+          echo "::set-output name=logfile::$(sed ':a;N;$!ba;s/\n/{newline}/g' < ${{ steps.lint.outputs.logfile }} )"
+
+      - name: Augment PR with yamllint infos
+        uses: actions/github-script@0.9.0
+        if: steps.lint.outcome != 'success'
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### yamllint: 📖\`${{ steps.kubeval.outcome }}\`
+            <details><summary>Show results</summary>
+
+            \`\`\`
+            ${{ steps.lint-output.outputs.logfile }}
+            \`\`\`
+
+            </details>
+
+            __Author:__ @${{ github.actor }},
+            __Action:__ \`${{ github.event_name }}\``;
+
+            new_output = output.replace(/{newline}/g, "\n");
+
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: new_output
+            })
+
+      - name: Fail pipeline if previously failed
+        if: steps.lint.outcome != 'success'
+        run: exit 1
 
       - name: Kubeval
         id: kubeval
@@ -107,6 +146,10 @@ jobs:
               repo: context.repo.repo,
               body: new_output
             })
+
+      - name: Fail pipeline if previously failed
+        if: steps.kubeval.outcome != 'success'
+        run: exit 1
 
   lint_terraform:
     name: "Lint terraform code"
@@ -221,9 +264,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            const output = `#### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
             <details><summary>Show Plan</summary>
 
             \`\`\`terraform
