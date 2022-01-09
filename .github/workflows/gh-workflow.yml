@@ -302,9 +302,6 @@ jobs:
           token: "${{ secrets.DEPLOY_GH_KEY }}"
           title: "Update machinedeployment"
           base: main
-          branch: "machinedeployment/${{ env.GITHUB_ACTION }}"
           delete-branch: true
-          commit-message: "bump machine deployment from ${{ env.GITHUB_REPOSITORY }} ${{ env.GITHUB_ACTION }} caused by ${{ env.GITHUB_EVENT_NAME }}"
+          commit-message: "bump machine deployment"
           add-paths: manifests/machinedeployment/cpx31.yaml
-          assignees: cedi
-          labels: ci-automation
