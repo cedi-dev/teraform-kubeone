@@ -149,8 +149,10 @@ jobs:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
 
       - name: KubeOne Apply
+        id: apply
         uses: cedi/gh-action-kubeone@main
         if: github.event.inputs.verbose != 'true'
+        continue-on-error: true
         with:
           version: v1.4.0-beta.0
           command: apply
@@ -158,7 +160,7 @@ jobs:
 
       - name: KubeOne Apply (verbose)
         uses: cedi/gh-action-kubeone@main
-        if: github.event.inputs.verbose == 'true'
+        if: github.event.inputs.verbose == 'true' || steps.apply.outcome != 'success'
         with:
           version: v1.4.0-beta.0
           command: apply
