@@ -2,7 +2,8 @@ output "kubeone_api" {
   description = "kube-apiserver LB endpoint"
 
   value = {
-    endpoint = "api.av0.de"
+    endpoint                    = "${hetznerdns_record.dns_api_v4.name}.${hetznerdns_zone.dns.name}"
+    apiserver_alternative_names = var.apiserver_alternative_names
   }
 }
 

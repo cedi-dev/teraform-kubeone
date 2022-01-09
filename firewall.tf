@@ -1,12 +1,13 @@
-resource "hcloud_firewall" "cluster" {
+resource "hcloud_firewall" "api-fw" {
   name = "${var.cluster_name}-fw"
 
   labels = {
-    "kubeone_cluster_name" = var.cluster_name
+    "cluster" = var.cluster_name
+    "role"    = "api"
   }
 
   apply_to {
-    label_selector = "kubeone_cluster_name=${var.cluster_name}"
+    label_selector = "cluster=av0"
   }
 
   rule {
@@ -57,12 +58,12 @@ resource "hcloud_firewall" "cluster" {
     port        = "30000-32767"
     source_ips = [
       "0.0.0.0/0",
-      "::/0",
+      "::/0"
     ]
   }
 
   rule {
-    description = "allow kubeconfig from any"
+    description = "allow kubectl from any"
     direction   = "in"
     protocol    = "tcp"
     port        = "6443"

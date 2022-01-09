@@ -50,7 +50,8 @@
 		"oderwat.indent-rainbow", // I hate to install this plugin only to show colors in yaml documents... I would prefer to use `"editor.bracketPairColorization.enabled": true,` like everywhere else...
 		"aaron-bond.better-comments",
 		"mohamedfaizal.tf-az-codesnippet",
-		"betajob.modulestf"
+		"betajob.modulestf",
+		"pjmiravalle.terraform-advanced-syntax-highlighting"
 	],
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [9000],

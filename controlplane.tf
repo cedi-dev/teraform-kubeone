@@ -1,16 +1,19 @@
-
-resource "hcloud_server_network" "control_plane" {
-  count     = var.control_plane_replicas
-  server_id = element(hcloud_server.control_plane.*.id, count.index)
-  subnet_id = hcloud_network_subnet.kubeone.id
+resource "hcloud_placement_group" "control_plane_placement" {
+  name = "api placement"
+  type = "spread"
+  labels = {
+    "cluster" = var.cluster_name
+    "role"    = "api"
+  }
 }
 
 resource "hcloud_server" "control_plane" {
-  count       = var.control_plane_replicas
-  name        = "${var.cluster_name}-control-plane-${count.index + 1}"
-  server_type = var.control_plane_type
-  image       = var.image
-  location    = var.datacenter
+  count              = var.control_plane_replicas
+  name               = "api${count.index + 1}.${hetznerdns_zone.dns.name}"
+  server_type        = var.control_plane_type
+  image              = var.image
+  location           = var.datacenter
+  placement_group_id = hcloud_placement_group.control_plane_placement.id
 
   ssh_keys = [
     hcloud_ssh_key.cedi_ivy.name,
@@ -20,7 +23,7 @@ resource "hcloud_server" "control_plane" {
   ]
 
   labels = {
-    "kubeone_cluster_name" = var.cluster_name
-    "role"                 = "api"
+    "cluster" = var.cluster_name
+    "role"    = "api"
   }
 }

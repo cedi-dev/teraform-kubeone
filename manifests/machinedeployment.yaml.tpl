@@ -35,7 +35,7 @@ spec:
                 key: HZ_TOKEN
             labels:
               role: worker
-              kubeone_cluster_name: "${CLUSTER_NAME}"
+              cluster: "${CLUSTER_NAME}"
             serverType: "cpx31"
             location: "${DATACENTER_LOCATION}"
             image: "ubuntu-20.04"
