@@ -3,6 +3,6 @@ kind: Secret
 type: Opaque
 metadata:
   name: cloud-provider-credentials
-  namespace: external-dns
+  namespace: kube-system
 data:
-  HZ_DNS_TOKEN: ${HDNS_TOKEN}
+  HZ_TOKEN: ${HCLOUD_TOKEN}

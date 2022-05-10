@@ -55,7 +55,7 @@ jobs:
         run: |
           envsubst < ./manifests/hcloud_secret.yaml.tpl > ./manifests/hcloud_secret.yaml
         env:
-          HDNS_TOKEN: JHt7IHNlY3JldHMuSEROU19UT0tFTiB9fQ==
+          HCLOUD_TOKEN: JHt7IHNlY3JldHMuSEROU19UT0tFTiB9fQ==
 
       - name: Template Helm Secrets
         run: |
