@@ -154,7 +154,7 @@ jobs:
         if: github.event.inputs.verbose != 'true'
         continue-on-error: true
         with:
-          version: v1.4.0-beta.0
+          version: v1.4.2
           command: apply
           args: --auto-approve
 
@@ -162,14 +162,14 @@ jobs:
         uses: cedi/gh-action-kubeone@main
         if: github.event.inputs.verbose == 'true' || steps.apply.outcome != 'success'
         with:
-          version: v1.4.0-beta.0
+          version: v1.4.2
           command: apply
           args: --auto-approve --verbose
 
       - name: KubeOne Status
         uses: cedi/gh-action-kubeone@main
         with:
-          version: v1.4.0-beta.0
+          version: v1.4.2
           command: status
 
   kubectl:
@@ -211,7 +211,7 @@ jobs:
       - name: Obtain kubeconfig
         uses: cedi/gh-action-kubeone@main
         with:
-          version: v1.4.0-beta.0
+          version: v1.4.2
           command: kubeconfig
           args: "> kubeconfig"
 
