@@ -157,6 +157,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -174,6 +177,7 @@ jobs:
         run: |
           terraform fmt -check | tee terraform_fmt.txt
           echo "::set-output name=fmt::$(sed ':a;N;$!ba;s/\n/{newline}/g' < terraform_fmt.txt)"
+          terraform fmt -check
 
       - name: Augment PR with terraform format infos
         uses: actions/github-script@0.9.0
@@ -199,6 +203,19 @@ jobs:
               repo: context.repo.repo,
               body: new_output
             })
+
+      - name: Auto-Format with terraform fmt
+        if: steps.tffmt.outcome != 'success'
+        run: |
+          terraform fmt
+
+      - name: Commit terraform fmt
+        uses: EndBug/add-and-commit@v9
+        if: steps.tffmt.outcome != 'success'
+        with:
+          message: terraform fmt
+          committer_name: GitHub Actions
+          committer_email: actions@github.com
 
       - name: Terraform Validate
         id: validate

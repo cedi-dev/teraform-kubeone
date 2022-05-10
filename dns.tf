@@ -3,7 +3,7 @@ resource "cloudflare_record" "dns_api_v4" {
   name    = "api"
   value   = hcloud_load_balancer.load_balancer.ipv4
   type    = "A"
-  ttl     = 600
+  ttl     = 1
 }
 
 resource "cloudflare_record" "dns_api_v6" {
@@ -11,7 +11,7 @@ resource "cloudflare_record" "dns_api_v6" {
   name    = "api"
   value   = hcloud_load_balancer.load_balancer.ipv6
   type    = "AAAA"
-  ttl     = 600
+  ttl     = 1
 }
 
 resource "cloudflare_record" "dns_api_host_v4" {
@@ -20,7 +20,7 @@ resource "cloudflare_record" "dns_api_host_v4" {
   count   = var.control_plane_replicas
   value   = element(hcloud_server.control_plane.*.ipv4_address, count.index)
   type    = "A"
-  ttl     = 600
+  ttl     = 1
 }
 
 resource "cloudflare_record" "dns_api_host_v6" {
@@ -29,7 +29,7 @@ resource "cloudflare_record" "dns_api_host_v6" {
   count   = var.control_plane_replicas
   value   = element(hcloud_server.control_plane.*.ipv6_address, count.index)
   type    = "AAAA"
-  ttl     = 600
+  ttl     = 1
 }
 
 resource "hcloud_rdns" "master" {
