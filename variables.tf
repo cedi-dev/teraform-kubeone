@@ -80,3 +80,8 @@ variable "network_zone" {
   default     = "eu-central"
   description = "network zone to use for private network"
 }
+
+variable "cloudflare_zone_id" {
+  description = "ZoneID of the cloudflare DNS zone"
+  default     = ""
+}

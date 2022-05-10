@@ -9,7 +9,7 @@ resource "hcloud_placement_group" "control_plane_placement" {
 
 resource "hcloud_server" "control_plane" {
   count              = var.control_plane_replicas
-  name               = "api${count.index + 1}.${hetznerdns_zone.dns.name}"
+  name               = "api${count.index + 1}.${var.dns_domain}"
   server_type        = var.control_plane_type
   image              = var.image
   location           = var.datacenter
