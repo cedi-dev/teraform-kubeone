@@ -13,7 +13,7 @@ resource "cloudflare_record" "dns_api_v6" {
   value   = hcloud_load_balancer.load_balancer.ipv6
   type    = "AAAA"
   ttl     = 1
-  proxied = true
+  proxied = false
 }
 
 resource "cloudflare_record" "dns_api_host_v4" {
@@ -23,7 +23,7 @@ resource "cloudflare_record" "dns_api_host_v4" {
   value   = element(hcloud_server.control_plane.*.ipv4_address, count.index)
   type    = "A"
   ttl     = 1
-  proxied = true
+  proxied = false
 }
 
 resource "cloudflare_record" "dns_api_host_v6" {
@@ -33,7 +33,7 @@ resource "cloudflare_record" "dns_api_host_v6" {
   value   = element(hcloud_server.control_plane.*.ipv6_address, count.index)
   type    = "AAAA"
   ttl     = 1
-  proxied = true
+  proxied = false
 }
 
 resource "hcloud_rdns" "master" {
