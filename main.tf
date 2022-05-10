@@ -8,6 +8,10 @@ terraform {
       source  = "timohirt/hetznerdns"
       version = "1.2.0"
     }
+    cloudflare = {
+      source = "cloudflare/cloudflare"
+      version = "~> 3.0"
+    }
   }
 
   backend "remote" {
