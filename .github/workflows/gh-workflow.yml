@@ -25,7 +25,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Terraform Init
         id: init
@@ -87,7 +87,7 @@ jobs:
     needs: lint
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -122,7 +122,7 @@ jobs:
     needs: terraform
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Download output.json
         uses: actions/download-artifact@v2
@@ -182,7 +182,7 @@ jobs:
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Download output.json
         uses: actions/download-artifact@v2
@@ -260,7 +260,7 @@ jobs:
     needs: kubectl
     steps:
       - name: Checkout k8smanifests repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           # Repository name with owner. For example, actions/checkout
           # Default: ${{ github.repository }}
