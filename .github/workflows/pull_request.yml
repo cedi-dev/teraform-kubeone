@@ -8,7 +8,7 @@ jobs:
     name: "Lint yaml manifests"
     runs-on: ubuntu-latest
     steps:
-      - uses: av0de/gh-action-install-kubeval@main
+      - uses: cedi-dev/gh-action-install-kubeval@main
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -24,7 +24,7 @@ jobs:
             },
             "kubeone_api": {
               "value": {
-                "endpoint": "api.av0.de"
+                "endpoint": "api.cedi.dev"
               }
             },
             "kubeone_hosts": {

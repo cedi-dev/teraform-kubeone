@@ -6,10 +6,6 @@ on:
       - main
   workflow_dispatch:
     inputs:
-      kubeconfig:
-        description: 'Generate Kubeconfig'
-        required: false
-        default: 'false'
       verbose:
         description: 'run KubeOne with verbose output'
         required: false
@@ -20,7 +16,7 @@ jobs:
     name: "Lint Configuration"
     runs-on: ubuntu-latest
     steps:
-      - uses: av0de/gh-action-install-kubeval@main
+      - uses: cedi-dev/gh-action-install-kubeval@main
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -53,9 +49,10 @@ jobs:
 
       - name: Template Hetzner API Secrets
         run: |
+          export HCLOUD_TOKEN=$(echo $HCLOUD_TOKEN_PLAIN | base64)
           envsubst < ./manifests/hcloud_secret.yaml.tpl > ./manifests/hcloud_secret.yaml
         env:
-          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          HCLOUD_TOKEN_PLAIN: ${{ secrets.HCLOUD_TOKEN_BASE64 }}
 
       - name: Template Helm Secrets
         run: |
@@ -150,7 +147,7 @@ jobs:
 
       - name: KubeOne Apply
         id: apply
-        uses: cedi/gh-action-kubeone@main
+        uses: cedi-dev/gh-action-k1@main
         if: github.event.inputs.verbose != 'true'
         continue-on-error: true
         with:
@@ -159,7 +156,7 @@ jobs:
           args: --auto-approve
 
       - name: KubeOne Apply (verbose)
-        uses: cedi/gh-action-kubeone@main
+        uses: cedi-dev/gh-action-k1@main
         if: github.event.inputs.verbose == 'true' || steps.apply.outcome != 'success'
         with:
           version: v1.4.2
@@ -167,7 +164,7 @@ jobs:
           args: --auto-approve --verbose
 
       - name: KubeOne Status
-        uses: cedi/gh-action-kubeone@main
+        uses: cedi-dev/gh-action-k1@main
         with:
           version: v1.4.2
           command: status
@@ -209,18 +206,11 @@ jobs:
           if_key_exists: replace
 
       - name: Obtain kubeconfig
-        uses: cedi/gh-action-kubeone@main
+        uses: cedi-dev/gh-action-k1@main
         with:
           version: v1.4.2
           command: kubeconfig
           args: "> kubeconfig"
-
-      - name: Archive kubeconfig
-        uses: actions/upload-artifact@v2
-        if: github.event.inputs.kubeconfig == 'true'
-        with:
-          name: kubeconfig
-          path: kubeconfig
 
       - name: Template machine-deployment file
         run: |
@@ -265,16 +255,16 @@ jobs:
           KUBECONFIG: ./kubeconfig
 
   machinedeployment:
-    name: "Deploy Machinedeployment yaml to k8s-manifest repo"
+    name: "Deploy Machinedeployment yaml to k8smanifest repo"
     runs-on: ubuntu-latest
     needs: kubectl
     steps:
-      - name: Checkout k8s-manifests repo
+      - name: Checkout k8smanifests repo
         uses: actions/checkout@v2
         with:
           # Repository name with owner. For example, actions/checkout
           # Default: ${{ github.repository }}
-          repository: "av0de/k8s-manifests"
+          repository: "cedi-dev/k8smanifests"
           token: "${{ secrets.DEPLOY_GH_KEY }}"
 
       - name: Configure git user

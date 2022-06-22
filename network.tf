@@ -10,9 +10,18 @@ resource "hcloud_network_subnet" "kubeone" {
   ip_range     = var.ip_range
 }
 
-resource "hcloud_server_network" "control_plane" {
-  count     = var.control_plane_replicas
-  server_id = element(hcloud_server.control_plane.*.id, count.index)
+resource "hcloud_server_network" "control_plane1" {
+  server_id = hcloud_server.control_plane1.id
+  subnet_id = hcloud_network_subnet.kubeone.id
+}
+
+resource "hcloud_server_network" "control_plane2" {
+  server_id = hcloud_server.control_plane2.id
+  subnet_id = hcloud_network_subnet.kubeone.id
+}
+
+resource "hcloud_server_network" "control_plane3" {
+  server_id = hcloud_server.control_plane3.id
   subnet_id = hcloud_network_subnet.kubeone.id
 }
 
@@ -32,14 +41,35 @@ resource "hcloud_load_balancer" "load_balancer" {
   }
 }
 
-resource "hcloud_load_balancer_target" "load_balancer_target" {
-  count            = var.control_plane_replicas
+resource "hcloud_load_balancer_target" "lb_target_cp1" {
   type             = "server"
   load_balancer_id = hcloud_load_balancer.load_balancer.id
-  server_id        = element(hcloud_server.control_plane.*.id, count.index)
+  server_id        = hcloud_server.control_plane1.id
   use_private_ip   = true
   depends_on = [
-    hcloud_server_network.control_plane,
+    hcloud_server_network.control_plane1,
+    hcloud_load_balancer_network.load_balancer
+  ]
+}
+
+resource "hcloud_load_balancer_target" "lb_target_cp2" {
+  type             = "server"
+  load_balancer_id = hcloud_load_balancer.load_balancer.id
+  server_id        = hcloud_server.control_plane2.id
+  use_private_ip   = true
+  depends_on = [
+    hcloud_server_network.control_plane2,
+    hcloud_load_balancer_network.load_balancer
+  ]
+}
+
+resource "hcloud_load_balancer_target" "lb_target_cp3" {
+  type             = "server"
+  load_balancer_id = hcloud_load_balancer.load_balancer.id
+  server_id        = hcloud_server.control_plane3.id
+  use_private_ip   = true
+  depends_on = [
+    hcloud_server_network.control_plane3,
     hcloud_load_balancer_network.load_balancer
   ]
 }
