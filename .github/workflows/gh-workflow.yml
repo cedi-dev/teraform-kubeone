@@ -52,7 +52,7 @@ jobs:
           export HCLOUD_TOKEN=$(echo $HCLOUD_TOKEN_PLAIN | base64)
           envsubst < ./manifests/hcloud_secret.yaml.tpl > ./manifests/hcloud_secret.yaml
         env:
-          HCLOUD_TOKEN_PLAIN: ${{ secrets.HCLOUD_TOKEN_BASE64 }}
+          HCLOUD_TOKEN_PLAIN: ${{ secrets.HCLOUD_TOKEN }}
 
       - name: Template Helm Secrets
         run: |
