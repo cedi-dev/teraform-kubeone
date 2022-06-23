@@ -1,0 +1,52 @@
+name: "test"
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      verbose:
+        description: 'run KubeOne with verbose output'
+        required: false
+        default: 'false'
+
+jobs:
+  machinedeployment:
+    name: "Deploy Machinedeployment yaml to k8smanifest repo"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          name: id_ed25519
+          config: |
+            *
+              StrictHostKeyChecking=no
+          known_hosts: unnecessary
+          if_key_exists: replace
+
+      - name: Checkout k8smanifests repo
+        uses: actions/checkout@v3
+        with:
+          repository: "cedi-dev/k8smanifests"
+          ssh-key: ${{ secrets.SSH_KEY }}
+
+      - name: Check remote
+        run: |
+          git remote -v
+
+      - name: Configure git user
+        run: |
+          git config user.name 'cedi'
+          git config user.email 'cedi@users.noreply.github.com'
+      
+      - name: modify
+        run: |
+          uuid=$(uuidgen)
+          git checkout -b $uuid
+          echo $uuid > test.txt
+          git add .
+          git commit -m "test - $uuid"
+          git push
