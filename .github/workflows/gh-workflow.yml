@@ -257,7 +257,7 @@ jobs:
   machinedeployment:
     name: "Deploy Machinedeployment yaml to k8smanifest repo"
     runs-on: ubuntu-latest
-    needs: kubectl
+    needs: kubeone
     steps:
       - name: Checkout k8smanifests repo
         uses: actions/checkout@v3
