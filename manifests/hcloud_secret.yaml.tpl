@@ -4,5 +4,5 @@ type: Opaque
 metadata:
   name: cloud-provider-credentials
   namespace: kube-system
-data:
+stringData:
   HZ_TOKEN: ${HCLOUD_TOKEN}
