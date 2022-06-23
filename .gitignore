@@ -71,3 +71,4 @@ av0.tar.gz
 output.json
 kubeconfig
 helm_secret.yaml
+manifests/*.yaml

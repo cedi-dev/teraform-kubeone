@@ -49,7 +49,7 @@ jobs:
 
       - name: Template Hetzner API Secrets
         run: |
-          export HCLOUD_TOKEN=$(echo $HCLOUD_TOKEN_PLAIN | base64)
+          export HCLOUD_TOKEN=`echo $HCLOUD_TOKEN_PLAIN | base64`
           envsubst < ./manifests/hcloud_secret.yaml.tpl > ./manifests/hcloud_secret.yaml
         env:
           HCLOUD_TOKEN_PLAIN: ${{ secrets.HCLOUD_TOKEN }}
