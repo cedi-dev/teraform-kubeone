@@ -8,7 +8,7 @@ resource "hcloud_placement_group" "control_plane_placement" {
 }
 
 resource "hcloud_server" "control_plane1" {
-  name               = "api1.${var.dns_domain}"
+  name               = "k8s-api1.${var.dns_domain}"
   server_type        = var.control_plane_type
   image              = var.image
   location           = var.datacenter
@@ -28,7 +28,7 @@ resource "hcloud_server" "control_plane1" {
 
 resource "cloudflare_record" "dns_v4_api1" {
   zone_id = var.cloudflare_zone_id
-  name    = "api1"
+  name    = "k8s-api1"
   value   = hcloud_server.control_plane1.ipv4_address
   type    = "A"
   ttl     = 1
@@ -37,7 +37,7 @@ resource "cloudflare_record" "dns_v4_api1" {
 
 resource "cloudflare_record" "dns_v6_api1" {
   zone_id = var.cloudflare_zone_id
-  name    = "api1"
+  name    = "k8s-api1"
   value   = hcloud_server.control_plane1.ipv6_address
   type    = "AAAA"
   ttl     = 1
@@ -47,11 +47,11 @@ resource "cloudflare_record" "dns_v6_api1" {
 resource "hcloud_rdns" "rdns_api1" {
   server_id  = hcloud_server.control_plane1.id
   ip_address = hcloud_server.control_plane1.ipv4_address
-  dns_ptr    = "api1.${var.dns_domain}"
+  dns_ptr    = "k8s-api1.${var.dns_domain}"
 }
 
 resource "hcloud_server" "control_plane2" {
-  name               = "api2.${var.dns_domain}"
+  name               = "k8s-api2.${var.dns_domain}"
   server_type        = var.control_plane_type
   image              = var.image
   location           = var.datacenter
@@ -71,7 +71,7 @@ resource "hcloud_server" "control_plane2" {
 
 resource "cloudflare_record" "dns_v4_api2" {
   zone_id = var.cloudflare_zone_id
-  name    = "api2"
+  name    = "k8s-api2"
   value   = hcloud_server.control_plane2.ipv4_address
   type    = "A"
   ttl     = 1
@@ -80,7 +80,7 @@ resource "cloudflare_record" "dns_v4_api2" {
 
 resource "cloudflare_record" "dns_v6_api2" {
   zone_id = var.cloudflare_zone_id
-  name    = "api2"
+  name    = "k8s-api2"
   value   = hcloud_server.control_plane2.ipv6_address
   type    = "AAAA"
   ttl     = 1
@@ -90,7 +90,7 @@ resource "cloudflare_record" "dns_v6_api2" {
 resource "hcloud_rdns" "rdns_api2" {
   server_id  = hcloud_server.control_plane2.id
   ip_address = hcloud_server.control_plane2.ipv4_address
-  dns_ptr    = "api2.${var.dns_domain}"
+  dns_ptr    = "k8s-api2.${var.dns_domain}"
 }
 
 resource "hcloud_server" "control_plane3" {
@@ -114,7 +114,7 @@ resource "hcloud_server" "control_plane3" {
 
 resource "cloudflare_record" "dns_v4_api3" {
   zone_id = var.cloudflare_zone_id
-  name    = "api3"
+  name    = "k8s-api3"
   value   = hcloud_server.control_plane3.ipv4_address
   type    = "A"
   ttl     = 1
@@ -123,7 +123,7 @@ resource "cloudflare_record" "dns_v4_api3" {
 
 resource "cloudflare_record" "dns_v6_api3" {
   zone_id = var.cloudflare_zone_id
-  name    = "api3"
+  name    = "k8s-api3"
   value   = hcloud_server.control_plane3.ipv6_address
   type    = "AAAA"
   ttl     = 1
@@ -133,5 +133,5 @@ resource "cloudflare_record" "dns_v6_api3" {
 resource "hcloud_rdns" "rdns_api3" {
   server_id  = hcloud_server.control_plane3.id
   ip_address = hcloud_server.control_plane3.ipv4_address
-  dns_ptr    = "api3.${var.dns_domain}"
+  dns_ptr    = "k8s-api3.${var.dns_domain}"
 }
