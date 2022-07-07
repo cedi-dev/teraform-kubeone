@@ -66,8 +66,8 @@ override.tf.json
 machinedeployment.yaml
 credentials.yaml
 .terraform.lock.hcl
-av0-kubeconfig
-av0.tar.gz
+*-kubeconfig
+*.tar.gz
 output.json
 kubeconfig
 helm_secret.yaml
