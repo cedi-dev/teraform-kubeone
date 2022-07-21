@@ -72,3 +72,4 @@ output.json
 kubeconfig
 helm_secret.yaml
 manifests/*.yaml
+*_secret.yaml
