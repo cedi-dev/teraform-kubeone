@@ -4,7 +4,7 @@ kind: KubeOneCluster
 name: cedi-dev
 
 versions:
-  kubernetes: "1.23.1"
+  kubernetes: "1.23.12"
 
 clusterNetwork:
   # the subnet used for pods (default: 10.244.0.0/16)
