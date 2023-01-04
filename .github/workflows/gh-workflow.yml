@@ -110,7 +110,7 @@ jobs:
         run: terraform output -json > output.json
 
       - name: Archive terraform output
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: output.json
           path: output.json
@@ -220,7 +220,7 @@ jobs:
           envsubst < ./manifests/machinedeployment.yaml.tpl > ./machinedeployment.yaml
 
       - name: Archive machine-deployment file
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: machinedeployment.yaml
           path: machinedeployment.yaml
